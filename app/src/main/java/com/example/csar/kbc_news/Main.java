@@ -109,3 +109,5 @@ public class Main extends AppCompatActivity implements NavigationView.OnNavigati
         return true;
     }
 }
+
+//// Hola, soy homosexual y que?
