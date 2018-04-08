@@ -73,7 +73,8 @@ public class ActividadPrincipal extends ActividadBase {
 
                         rowNews.setGravity(Gravity.CENTER);
 
-                        Picasso.with(ActividadPrincipal.this).load(n.getUrl()).into(iv);
+                        Picasso.with(ActividadPrincipal.this).load(n.getUrlToImage())
+                                .resize(150, 84).into(iv);
 
                         ip.setImageResource(R.drawable.ic_action_overflow);
                         rowNews.setOrientation(LinearLayout.HORIZONTAL);
