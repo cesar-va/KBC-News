@@ -1,10 +1,14 @@
 package com.example.csar.kbc_news.actividades;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
+import android.util.Log;
+import android.widget.Button;
+import android.widget.LinearLayout.LayoutParams;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,6 +42,8 @@ import static com.example.csar.kbc_news.R.id.content_frame;
 import static com.example.csar.kbc_news.R.id.favorito;
 import static com.example.csar.kbc_news.R.id.nav_view;
 import static com.example.csar.kbc_news.R.id.newsContainer;
+import static com.example.csar.kbc_news.R.id.opcionFiltro;
+import static com.example.csar.kbc_news.R.id.swipe_container;
 import static com.example.csar.kbc_news.R.layout;
 
 public class ActividadPrincipal extends ActividadBase {
@@ -45,24 +51,35 @@ public class ActividadPrincipal extends ActividadBase {
     List<Noticia> lNoticias;
     String TituloNoticia = "";
     String UrlNoticia = "";
+    ListView todasNoticias;
+    Dialog ventana;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FrameLayout contentFrameLayout = (FrameLayout) findViewById(content_frame);
         getLayoutInflater().inflate(layout.activity_main, contentFrameLayout);
-        NavigationView navigationView = (NavigationView) findViewById(nav_view);
-        navigationView.getMenu().getItem(0).setChecked(true);
         getSupportActionBar().setTitle("Explorador");
 
+        //Comentar esto si se ejecuta desde un dispositivo real
+        this.httpUtils.confiarTodosCertificados();
+        todasNoticias = (ListView) findViewById(newsContainer);
+
         loadRecentNews();
+
+        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(id.swipe_container);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadRecentNews();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+        ventana = new Dialog(ActividadPrincipal.this);
     }
 
     public void loadRecentNews() {
-        //Comentar esto si se ejecuta desde un dispositivo real
-        this.httpUtils.confiarTodosCertificados();
-        final ListView todasNoticias = (ListView) findViewById(newsContainer);
-
         // Callback para obtener noticias por pais
         Call<RespuestaNoticias> call = this.httpUtils.callNoticiasPorPais("us");
         call.enqueue(new Callback<RespuestaNoticias>() {
@@ -115,13 +132,12 @@ public class ActividadPrincipal extends ActividadBase {
     }
 
     @Override
-    public boolean onCreateOptionsMenu( Menu menu ){
+    public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflate = getMenuInflater();
         inflate.inflate(R.menu.menu_search, menu);
 
-        MenuItem item = menu.findItem( R.id.menuSearch);
+        MenuItem item = menu.findItem(R.id.menuSearch);
         SearchView searchView = (SearchView) item.getActionView();
-
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -135,6 +151,30 @@ public class ActividadPrincipal extends ActividadBase {
         });
 
         return super.onCreateOptionsMenu(menu);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.opcionFiltro:
+                ventana.setContentView(R.layout.filtros);
+                Button cerrar = (Button) ventana.findViewById(R.id.btnLogin);
+                cerrar.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v){
+                        ventana.dismiss();
+                    }
+                });
+
+                ventana.show();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    public void mostrarPopUp(){
+
     }
 
     class CustomAdapter extends BaseAdapter {
