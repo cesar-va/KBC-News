@@ -7,9 +7,20 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.SearchView;
 
 import com.example.csar.kbc_news.R;
+
+import java.util.zip.Inflater;
+
+import static com.example.csar.kbc_news.R.id.compartir;
+import static com.example.csar.kbc_news.R.id.favorito;
 
 public class ActividadBase extends AppCompatActivity {
 
@@ -20,9 +31,8 @@ public class ActividadBase extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_actividad_base);
+        setContentView(R.layout.actividad_base);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -96,6 +106,27 @@ public class ActividadBase extends AppCompatActivity {
         super.startActivity(intent);
         overridePendingTransitionEnter();
     }
+
+/*    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater infla = getMenuInflater();
+        infla.inflate(R.menu.menu_search, menu);
+        super.onCreateContextMenu(menu, v, menuInfo);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case filtros:
+                //Mensaje("Op. 1");
+                break;
+                break;
+            default:
+                break;
+        }
+        return true;
+    }*/
 
     // Overrides the pending Activity transition by performing the "Enter" animation.
     protected void overridePendingTransitionEnter() {
