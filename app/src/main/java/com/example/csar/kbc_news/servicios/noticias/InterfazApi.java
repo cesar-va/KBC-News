@@ -7,9 +7,9 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 /*Esta clase brinda el API de las noticias, realiza los request de una manera mas ordenada y sencilla
-* Basado en la implementación de MyTimes por Debajyoti Basak
-*
-* */
+ * Basado en la implementación de MyTimes por Debajyoti Basak
+ *
+ * */
 
 public interface InterfazApi {
     //Probable ses después
@@ -29,5 +29,17 @@ public interface InterfazApi {
                                                     @Query("sortBy") String sortBy,
                                                     @Query("language") String language,
                                                     @Query("apiKey") String apiKey);
+
+    @GET("top-headlines")
+    Call<RespuestaNoticias> obtenerNoticiasCategoriaPais(@Query("category") String sources,
+                                                         @Query("country") String country,
+                                                         @Query("q") String q,
+                                                         @Query("apiKey") String apiKey);
+
+
+
+    /*
+     * categoria, lenguaje, pais
+     * */
 
 }

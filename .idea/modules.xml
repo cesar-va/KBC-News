@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://C:\Proyecto\KBC-News\AndroidStudioProjects.iml" filepath="C:\Proyecto\KBC-News\AndroidStudioProjects.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AndroidStudioProjects.iml" filepath="$PROJECT_DIR$/AndroidStudioProjects.iml" />
       <module fileurl="file://$PROJECT_DIR$/KBC-News.iml" filepath="$PROJECT_DIR$/KBC-News.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>

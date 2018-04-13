@@ -1,5 +1,7 @@
 package com.example.csar.kbc_news.actividades;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.csar.kbc_news.R;
 import com.example.csar.kbc_news.modelos.noticias.Noticia;
@@ -56,6 +57,28 @@ public class ActividadPrincipal extends ActividadBase {
         getSupportActionBar().setTitle("Explorador");
 
         loadRecentNews();
+
+        cargarNoticiasBusquedaAvanzada("sports", "","");
+
+    }
+
+    public void cargarNoticiasBusquedaAvanzada(String categoria, String lenguaje, String pais){
+        // Callback para obtener noticias por pais
+        Call<RespuestaNoticias> call = this.httpUtils.callNoticiasCategoriaPais("business", "", "");
+        call.enqueue(new Callback<RespuestaNoticias>() {
+            @Override
+            public void onResponse(@NonNull Call<RespuestaNoticias> call, @NonNull Response<RespuestaNoticias> response) {
+                // Aqui se pone la acción que se ejcutaría una vez que el servidor retorna los datos
+                if (response.isSuccessful() && response.body().getArticles() != null) {
+                    Mensaje(response.body().getArticles().toString());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<RespuestaNoticias> call, @NonNull Throwable t) {
+                System.out.println("Error");
+            }
+        });
     }
 
     public void loadRecentNews() {
@@ -111,8 +134,17 @@ public class ActividadPrincipal extends ActividadBase {
     }
 
     public void Mensaje(String msg) {
-        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+        View v1 = getWindow().getDecorView().getRootView();
+        AlertDialog.Builder builder1 = new AlertDialog.Builder( v1.getContext());
+        builder1.setMessage(msg);
+        builder1.setCancelable(true);
+        builder1.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {} });
+        AlertDialog alert11 = builder1.create();
+        alert11.show();
     }
+
 
     @Override
     public boolean onCreateOptionsMenu( Menu menu ){
