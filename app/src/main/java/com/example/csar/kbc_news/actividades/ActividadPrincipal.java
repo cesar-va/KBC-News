@@ -5,20 +5,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.text.InputType;
-import android.text.Layout;
 import android.view.ContextMenu;
-import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,23 +27,33 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import okhttp3.internal.Util;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.text.Layout.JUSTIFICATION_MODE_INTER_WORD;
+import static com.example.csar.kbc_news.R.drawable;
+import static com.example.csar.kbc_news.R.id;
+import static com.example.csar.kbc_news.R.id.compartir;
+import static com.example.csar.kbc_news.R.id.content_frame;
+import static com.example.csar.kbc_news.R.id.favorito;
+import static com.example.csar.kbc_news.R.id.nav_view;
+import static com.example.csar.kbc_news.R.id.newsContainer;
+import static com.example.csar.kbc_news.R.layout;
 
 public class ActividadPrincipal extends ActividadBase {
     HttpUtils httpUtils = new HttpUtils();
+    List<Noticia> lNoticias;
+    String TituloNoticia = "";
+    String UrlNoticia = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
-        getLayoutInflater().inflate(R.layout.activity_main, contentFrameLayout);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        FrameLayout contentFrameLayout = (FrameLayout) findViewById(content_frame);
+        getLayoutInflater().inflate(layout.activity_main, contentFrameLayout);
+        NavigationView navigationView = (NavigationView) findViewById(nav_view);
         navigationView.getMenu().getItem(0).setChecked(true);
+        getSupportActionBar().setTitle("Explorador");
 
         loadRecentNews();
     }
@@ -54,7 +61,7 @@ public class ActividadPrincipal extends ActividadBase {
     public void loadRecentNews() {
         //Comentar esto si se ejecuta desde un dispositivo real
         this.httpUtils.confiarTodosCertificados();
-        final LinearLayout todasNoticias = (LinearLayout) findViewById(R.id.newsContainer);
+        final ListView todasNoticias = (ListView) findViewById(newsContainer);
 
         // Callback para obtener noticias por pais
         Call<RespuestaNoticias> call = this.httpUtils.callNoticiasPorPais("us");
@@ -63,52 +70,9 @@ public class ActividadPrincipal extends ActividadBase {
             public void onResponse(@NonNull Call<RespuestaNoticias> call, @NonNull Response<RespuestaNoticias> response) {
                 // Aqui se pone la acción que se ejcutaría una vez que el servidor retorna los datos
                 if (response.isSuccessful() && response.body().getArticles() != null) {
-                    List<Noticia> lNoticias = response.body().getArticles();
-                    for (Noticia n : lNoticias) {
-                        final Noticia not = n;
-                        LinearLayout rowNews = new LinearLayout(ActividadPrincipal.this);
-                        ImageView iv = new ImageView(ActividadPrincipal.this);
-                        TextView et = new TextView(ActividadPrincipal.this);
-                        ImageView ip = new ImageView(ActividadPrincipal.this);
-
-                        rowNews.setGravity(Gravity.CENTER);
-
-                        Picasso.with(ActividadPrincipal.this).load(n.getUrlToImage())
-                                .resize(150, 84).into(iv);
-
-                        ip.setImageResource(R.drawable.ic_action_overflow);
-                        rowNews.setOrientation(LinearLayout.HORIZONTAL);
-
-                        et.setText(n.getDescription());
-                        et.setSingleLine(false);
-                        et.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
-                        et.setGravity(Gravity.CENTER);
-
-                        rowNews.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                                LinearLayout.LayoutParams.MATCH_PARENT));
-                        iv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                                LinearLayout.LayoutParams.WRAP_CONTENT));
-                        et.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                                LinearLayout.LayoutParams.WRAP_CONTENT));
-                        ip.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                                LinearLayout.LayoutParams.WRAP_CONTENT));
-
-                        registerForContextMenu(ip);
-
-                        rowNews.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(not.getUrl()));
-                                startActivity(i);
-                            }
-                        });
-
-                        rowNews.addView(ip);
-                        rowNews.addView(iv);
-                        rowNews.addView(et);
-
-                        todasNoticias.addView(rowNews);
-                    }
+                    lNoticias = response.body().getArticles();
+                    CustomAdapter cA = new CustomAdapter();
+                    todasNoticias.setAdapter(cA);
                 }
             }
 
@@ -122,23 +86,23 @@ public class ActividadPrincipal extends ActividadBase {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-            MenuInflater infla = getMenuInflater();
-            infla.inflate(R.menu.menu_contexto_noticia, menu);
-            super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater infla = getMenuInflater();
+        infla.inflate(R.menu.menu_contexto_noticia, menu);
+        super.onCreateContextMenu(menu, v, menuInfo);
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.favorito:
+            case favorito:
                 Mensaje("Op. 1");
                 break;
-            case R.id.compartir:
+            case compartir:
                 Intent i = new Intent(Intent.ACTION_SEND);
                 i.setType("text/plain");
                 i.putExtra(Intent.EXTRA_SUBJECT, "Sharing News");
-                i.putExtra(Intent.EXTRA_TEXT, "www.xnxx.com");
-                startActivity(Intent.createChooser(i, "Share URL"));
+                i.putExtra(Intent.EXTRA_TEXT, UrlNoticia);
+                startActivity(Intent.createChooser(i, "Compartir Noticia"));
                 break;
             default:
                 break;
@@ -146,8 +110,88 @@ public class ActividadPrincipal extends ActividadBase {
         return true;
     }
 
-    public void Mensaje(String msg){
+    public void Mensaje(String msg) {
         Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu( Menu menu ){
+        MenuInflater inflate = getMenuInflater();
+        inflate.inflate(R.menu.menu_search, menu);
+
+        MenuItem item = menu.findItem( R.id.menuSearch);
+        SearchView searchView = (SearchView) item.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    class CustomAdapter extends BaseAdapter {
+        @Override
+        public int getCount() {
+            return lNoticias.size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int index, View view, ViewGroup viewGroup) {
+            final int i = index;
+            view = getLayoutInflater().inflate(layout.fila_noticia, null);
+            ImageView im = (ImageView) view.findViewById(id.portada);
+            TextView tt = (TextView) view.findViewById(id.titulo);
+            TextView tc = (TextView) view.findViewById(id.cuerpo);
+            final ImageView io = (ImageView) view.findViewById(id.opciones);
+
+            if (lNoticias.get(i).getUrlToImage() != null)
+                Picasso.with(ActividadPrincipal.this).load(lNoticias.get(i).getUrlToImage())
+                        .resize(getWindowManager().getDefaultDisplay().getWidth(),
+                                (int) (84 / getWindowManager().getDefaultDisplay().getWidth())).into(im);
+
+            tt.setText(lNoticias.get(i).getTitle());
+            tc.setText(lNoticias.get(i).getDescription());
+            io.setImageResource(drawable.ic_action_overflow);
+
+            registerForContextMenu(io);
+
+            io.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    TituloNoticia = lNoticias.get(i).getTitle();
+                    UrlNoticia = lNoticias.get(i).getUrl();
+                    openContextMenu(io);
+                }
+            });
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent in = new Intent(Intent.ACTION_VIEW, Uri.parse(lNoticias.get(i).getUrl()));
+                    startActivity(in);
+                }
+            });
+
+            return view;
+        }
     }
 }
 
