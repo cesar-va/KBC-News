@@ -8,15 +8,16 @@
         android:iconTint="@android:color/white"
         android:tint="@android:color/white"
         android:title="Search"
+        app:itemIconTint="@android:color/white"
         app:actionViewClass="android.widget.SearchView"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_gravity="end"
-        app:showAsAction="always"
+        app:showAsAction="collapseActionView|always"
         />
 
     <item
-        android:id="@+id/filtros"
-        android:title="Filtrar Busqueda" />
+        android:id="@+id/opcionFiltro"
+        android:title="Filtrar Busqueda"
+        />
 
 </menu>
