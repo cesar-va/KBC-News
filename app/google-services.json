@@ -15,14 +15,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "809351073117-gc9ba86c47ovf3n1emr57bu0dvk9t955.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.csar.kbc_news",
-            "certificate_hash": "db840e7eda5556377b74e90cd5af2f7e08395373"
-          }
-        },
-        {
           "client_id": "809351073117-dj3vo2ibdc54lqslfjmn41s8tck0l9dv.apps.googleusercontent.com",
           "client_type": 3
         }
