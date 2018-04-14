@@ -16,12 +16,15 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.csar.kbc_news.R;
+import com.example.csar.kbc_news.utils.VariablesGlobales;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class ActividadBase extends AppCompatActivity {
 
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle actionBarDrawerToggle;
     Toolbar toolbar;
+    private FirebaseAuth mAuth = VariablesGlobales.getInstance().getmAuth();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +45,14 @@ public class ActividadBase extends AppCompatActivity {
 
                 switch (item.getItemId()) {
                     case R.id.cuenta:
-                        Intent cuenta = new Intent(getApplicationContext(), ActividadCuenta.class);
-                        startActivity(cuenta);
+                        if(mAuth.getInstance().getCurrentUser() != null){
+                            Intent cuenta = new Intent(getApplicationContext(), ActividadInformacionUsuario.class);
+                            startActivity(cuenta);
+                        }else{
+                            Intent cuenta = new Intent(getApplicationContext(), ActividadCuenta.class);
+                            startActivity(cuenta);
+                        }
+
                         drawerLayout.closeDrawers();
                         break;
                     case R.id.inicio:
