@@ -50,6 +50,8 @@ public class ActividadPrincipal extends ActividadBase {
     String UrlNoticia = "";
     ListView todasNoticias;
     Dialog ventana;
+    String spinnerCategorias = "";
+    String spinnerPaises = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,7 +163,8 @@ public class ActividadPrincipal extends ActividadBase {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                cargarNoticiasBusquedaAvanzada("",searchView.getQuery().toString(),"");
+                cargarNoticiasBusquedaAvanzada(spinnerCategorias,searchView.getQuery().toString(),spinnerPaises);
+                spinnerCategorias = spinnerPaises = "";
                 return false;
             }
 
@@ -191,11 +194,12 @@ public class ActividadPrincipal extends ActividadBase {
                 aceptar.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public void onClick(View v){
-                        Spinner sc=(Spinner) findViewById(id.categorias);
-                        String opcionC = sc.getSelectedItem().toString();
+                        Spinner sc=(Spinner) ventana.findViewById(id.categorias);
+                        spinnerCategorias = sc.getSelectedItem().toString();
 
-                        Spinner sp=(Spinner) findViewById(id.categorias);
-                        String opcionP = sp.getSelectedItem().toString();
+                        Spinner sp=(Spinner) ventana.findViewById(id.paises);
+                        spinnerPaises = obtenerCodigo(sp.getSelectedItem().toString());
+
                         ventana.dismiss();
                     }
                 });
@@ -204,6 +208,20 @@ public class ActividadPrincipal extends ActividadBase {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public String obtenerCodigo(String valor){
+        int index = -1;
+        String[] lista = getResources().getStringArray(R.array.lista_paises);
+        for (int i=0;i<lista.length;i++) {
+            if (lista[i].equals(valor)) {
+                index = i;
+                break;
+            }
+        }
+        String codigo = getResources().getStringArray(R.array.lista_codigo_paises)[index];
+        Mensaje(codigo);
+        return "";
     }
 
     class CustomAdapter extends BaseAdapter {

@@ -47,7 +47,8 @@
             <Spinner
                 android:id="@+id/categorias"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:entries="@array/lista_categorias"/>
         </TableRow>
 
         <TableRow
@@ -66,7 +67,8 @@
             <Spinner
                 android:id="@+id/paises"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:entries="@array/lista_paises"/>
         </TableRow>
     </TableLayout>
 
