@@ -62,36 +62,61 @@ public class ActividadCuenta extends ActividadBase {
     }
 
     public void login() {
-        final ProgressDialog progressDialog  = new ProgressDialog(this);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Verificando...");
-        progressDialog.show();
+        if(validarFormulario()) {
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setMessage("Verificando...");
+            progressDialog.show();
 
-        mAuth.signInWithEmailAndPassword(emailEditText.getText().toString(), contrasenaEditText.getText().toString())
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            progressDialog.dismiss();
-                            Intent intento = new Intent(getApplicationContext(), ActividadPrincipal.class);
-                            startActivity(intento);
+            mAuth.signInWithEmailAndPassword(emailEditText.getText().toString(), contrasenaEditText.getText().toString())
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                progressDialog.dismiss();
+                                Intent intento = new Intent(getApplicationContext(), ActividadPrincipal.class);
+                                startActivity(intento);
+                            }
+
                         }
+                    }).addOnFailureListener(this, new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    if (e instanceof FirebaseAuthInvalidUserException) {
+                        progressDialog.dismiss();
+                        emailEditText.setError("No existe cuenta con este correo");
+                    }
+                    if (e instanceof FirebaseAuthInvalidCredentialsException) {
+                        progressDialog.dismiss();
+                        contrasenaEditText.setError("Contraseña incorrecta");
 
                     }
-                }).addOnFailureListener(this, new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                if (e instanceof FirebaseAuthInvalidUserException ) {
-                    progressDialog.dismiss();
-                    emailEditText.setError("No existe cuenta con este correo");
                 }
-                if(e instanceof FirebaseAuthInvalidCredentialsException){
-                    progressDialog.dismiss();
-                    contrasenaEditText.setError("Contraseña incorrecta");
+            });
+        }
+    }
 
-                }
-            }
-        });
+    public boolean validarFormulario() {
+        boolean valido = true;
+
+        String email = emailEditText.getText().toString();
+        String contrasena = contrasenaEditText.getText().toString();
+
+        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            emailEditText.setError("Email inválido");
+            valido = false;
+        } else {
+            contrasenaEditText.setError(null);
+        }
+
+        if (contrasena.isEmpty() || contrasena.length() < 4 || contrasena.length() > 10) {
+            contrasenaEditText.setError("Contraseña inválida");
+            valido = false;
+        } else {
+            contrasenaEditText.setError(null);
+        }
+
+        return valido;
     }
 
     public void Mensaje(String msg) {
