@@ -36,7 +36,10 @@ public interface InterfazApi {
                                                          @Query("q") String q,
                                                          @Query("apiKey") String apiKey);
 
-
+    @GET("top-headlines")
+    Call<RespuestaNoticias> obtenerNoticiasCategoriaPaisSinQ(@Query("category") String sources,
+                                                         @Query("country") String country,
+                                                         @Query("apiKey") String apiKey);
 
     /*
      * categoria, lenguaje, pais

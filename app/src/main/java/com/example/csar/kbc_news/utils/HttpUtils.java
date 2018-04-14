@@ -100,4 +100,20 @@ public class HttpUtils {
         return call;
     }
 
+    public Call<RespuestaNoticias> callNoticiasCategoriaPaisSinQ(String categoria, String pais){
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        this.builder.addNetworkInterceptor(new ResponseCacheInterceptor());
+        //builder.cache(new okhttp3.Cache(new File(App.obtenerInstancia().getCacheDir(), "ResponsesCache"), 10 * 1024 * 1024));
+        this.builder.readTimeout(60, TimeUnit.SECONDS);
+        this.builder.connectTimeout(60, TimeUnit.SECONDS);
+        this.builder.addInterceptor(logging);
+
+        InterfazApi request = ClienteApi.obtenerCliente(this.builder).create(InterfazApi.class);
+
+        Call<RespuestaNoticias> call = request.obtenerNoticiasCategoriaPaisSinQ(categoria, pais,Constantes.NEWS_API_KEY);
+        return call;
+    }
+
 }

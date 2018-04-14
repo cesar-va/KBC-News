@@ -77,12 +77,13 @@ public class ActividadPrincipal extends ActividadBase {
 
         ventana = new Dialog(ActividadPrincipal.this);
 
-
     }
 
     public void cargarNoticiasBusquedaAvanzada(String categoria, String q, String pais){
         // Callback para obtener noticias por pais
-        Call<RespuestaNoticias> call = this.httpUtils.callNoticiasCategoriaPais(categoria, pais, q);
+        Call<RespuestaNoticias> call = (q.equals("")) ?this.httpUtils.callNoticiasCategoriaPaisSinQ(categoria, pais):
+                this.httpUtils.callNoticiasCategoriaPaisSinQ(categoria, pais);
+
         call.enqueue(new Callback<RespuestaNoticias>() {
             @Override
             public void onResponse(@NonNull Call<RespuestaNoticias> call, @NonNull Response<RespuestaNoticias> response) {
@@ -163,6 +164,7 @@ public class ActividadPrincipal extends ActividadBase {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                Mensaje("Vergas everuwhere");
                 cargarNoticiasBusquedaAvanzada(spinnerCategorias,searchView.getQuery().toString(),spinnerPaises);
                 spinnerCategorias = spinnerPaises = "";
                 return false;
@@ -196,10 +198,8 @@ public class ActividadPrincipal extends ActividadBase {
                     public void onClick(View v){
                         Spinner sc=(Spinner) ventana.findViewById(id.categorias);
                         spinnerCategorias = sc.getSelectedItem().toString();
-
                         Spinner sp=(Spinner) ventana.findViewById(id.paises);
                         spinnerPaises = obtenerCodigo(sp.getSelectedItem().toString());
-
                         ventana.dismiss();
                     }
                 });
@@ -220,8 +220,7 @@ public class ActividadPrincipal extends ActividadBase {
             }
         }
         String codigo = getResources().getStringArray(R.array.lista_codigo_paises)[index];
-        Mensaje(codigo);
-        return "";
+        return codigo;
     }
 
     class CustomAdapter extends BaseAdapter {
