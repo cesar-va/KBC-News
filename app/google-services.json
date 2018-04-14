@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "809351073117",
+    "firebase_url": "https://kbc-news-a8ad0.firebaseio.com",
+    "project_id": "kbc-news-a8ad0",
+    "storage_bucket": "kbc-news-a8ad0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:809351073117:android:1a2308c280723b10",
+        "android_client_info": {
+          "package_name": "com.example.csar.kbc_news"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "809351073117-gc9ba86c47ovf3n1emr57bu0dvk9t955.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.csar.kbc_news",
+            "certificate_hash": "db840e7eda5556377b74e90cd5af2f7e08395373"
+          }
+        },
+        {
+          "client_id": "809351073117-dj3vo2ibdc54lqslfjmn41s8tck0l9dv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrx7wS_zGLoPWyU8aSy4HDXz2Fznna_tE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "809351073117-dj3vo2ibdc54lqslfjmn41s8tck0l9dv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -5,9 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
-import android.widget.Button;
-import android.widget.LinearLayout.LayoutParams;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -15,11 +12,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,10 +40,7 @@ import static com.example.csar.kbc_news.R.id;
 import static com.example.csar.kbc_news.R.id.compartir;
 import static com.example.csar.kbc_news.R.id.content_frame;
 import static com.example.csar.kbc_news.R.id.favorito;
-import static com.example.csar.kbc_news.R.id.nav_view;
 import static com.example.csar.kbc_news.R.id.newsContainer;
-import static com.example.csar.kbc_news.R.id.opcionFiltro;
-import static com.example.csar.kbc_news.R.id.swipe_container;
 import static com.example.csar.kbc_news.R.layout;
 
 public class ActividadPrincipal extends ActividadBase {
@@ -65,21 +62,44 @@ public class ActividadPrincipal extends ActividadBase {
         this.httpUtils.confiarTodosCertificados();
         todasNoticias = (ListView) findViewById(newsContainer);
 
-        loadRecentNews();
+        cargarNoticiasRecientes();
 
         final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(id.swipe_container);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadRecentNews();
+                cargarNoticiasRecientes();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
 
         ventana = new Dialog(ActividadPrincipal.this);
+
+
     }
 
-    public void loadRecentNews() {
+    public void cargarNoticiasBusquedaAvanzada(String categoria, String q, String pais){
+        // Callback para obtener noticias por pais
+        Call<RespuestaNoticias> call = this.httpUtils.callNoticiasCategoriaPais(categoria, pais, q);
+        call.enqueue(new Callback<RespuestaNoticias>() {
+            @Override
+            public void onResponse(@NonNull Call<RespuestaNoticias> call, @NonNull Response<RespuestaNoticias> response) {
+                // Aqui se pone la acción que se ejcutaría una vez que el servidor retorna los datos
+                if (response.isSuccessful() && response.body().getArticles() != null) {
+                    lNoticias = response.body().getArticles();
+                    CustomAdapter cA = new CustomAdapter();
+                    todasNoticias.setAdapter(cA);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<RespuestaNoticias> call, @NonNull Throwable t) {
+                System.out.println("Error");
+            }
+        });
+    }
+
+    public void cargarNoticiasRecientes() {
         // Callback para obtener noticias por pais
         Call<RespuestaNoticias> call = this.httpUtils.callNoticiasPorPais("us");
         call.enqueue(new Callback<RespuestaNoticias>() {
@@ -137,10 +157,11 @@ public class ActividadPrincipal extends ActividadBase {
         inflate.inflate(R.menu.menu_search, menu);
 
         MenuItem item = menu.findItem(R.id.menuSearch);
-        SearchView searchView = (SearchView) item.getActionView();
+        final SearchView searchView = (SearchView) item.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                cargarNoticiasBusquedaAvanzada("",searchView.getQuery().toString(),"");
                 return false;
             }
 
@@ -154,14 +175,27 @@ public class ActividadPrincipal extends ActividadBase {
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
+        switch (item.getItemId()) {
             case R.id.opcionFiltro:
+                ventana.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 ventana.setContentView(R.layout.filtros);
-                Button cerrar = (Button) ventana.findViewById(R.id.btnLogin);
+                Button cerrar = (Button) ventana.findViewById(R.id.cancelar);
                 cerrar.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public void onClick(View v){
+                        ventana.dismiss();
+                    }
+                });
+
+                Button aceptar = (Button) ventana.findViewById(R.id.aceptar);
+                aceptar.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v){
+                        Spinner sc=(Spinner) findViewById(id.categorias);
+                        String opcionC = sc.getSelectedItem().toString();
+
+                        Spinner sp=(Spinner) findViewById(id.categorias);
+                        String opcionP = sp.getSelectedItem().toString();
                         ventana.dismiss();
                     }
                 });
@@ -170,11 +204,6 @@ public class ActividadPrincipal extends ActividadBase {
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-
-    public void mostrarPopUp(){
-
     }
 
     class CustomAdapter extends BaseAdapter {
