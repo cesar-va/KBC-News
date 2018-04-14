@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -76,13 +77,14 @@ public class ActividadPrincipal extends ActividadBase {
         });
 
         ventana = new Dialog(ActividadPrincipal.this);
-
+        ventana.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        ventana.setContentView(R.layout.filtros);
     }
 
     public void cargarNoticiasBusquedaAvanzada(String categoria, String q, String pais){
         // Callback para obtener noticias por pais
         Call<RespuestaNoticias> call = (q.equals("")) ?this.httpUtils.callNoticiasCategoriaPaisSinQ(categoria, pais):
-                this.httpUtils.callNoticiasCategoriaPaisSinQ(categoria, pais);
+                this.httpUtils.callNoticiasCategoriaPais(categoria, q, pais);
 
         call.enqueue(new Callback<RespuestaNoticias>() {
             @Override
@@ -164,15 +166,13 @@ public class ActividadPrincipal extends ActividadBase {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Mensaje("Vergas everuwhere");
-                cargarNoticiasBusquedaAvanzada(spinnerCategorias,searchView.getQuery().toString(),spinnerPaises);
-                spinnerCategorias = spinnerPaises = "";
-                return false;
+                cargarNoticiasBusquedaAvanzada(spinnerCategorias,query,spinnerPaises);
+                return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                return false;
+               return true;
             }
         });
 
@@ -182,12 +182,12 @@ public class ActividadPrincipal extends ActividadBase {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.opcionFiltro:
-                ventana.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                ventana.setContentView(R.layout.filtros);
                 Button cerrar = (Button) ventana.findViewById(R.id.cancelar);
                 cerrar.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public void onClick(View v){
+                        spinnerCategorias="";
+                        spinnerPaises="";
                         ventana.dismiss();
                     }
                 });
@@ -197,9 +197,9 @@ public class ActividadPrincipal extends ActividadBase {
                     @Override
                     public void onClick(View v){
                         Spinner sc=(Spinner) ventana.findViewById(id.categorias);
-                        spinnerCategorias = sc.getSelectedItem().toString();
+                        spinnerCategorias = obtenerCodigo(true, sc.getSelectedItem().toString());
                         Spinner sp=(Spinner) ventana.findViewById(id.paises);
-                        spinnerPaises = obtenerCodigo(sp.getSelectedItem().toString());
+                        spinnerPaises = obtenerCodigo(false, sp.getSelectedItem().toString());
                         ventana.dismiss();
                     }
                 });
@@ -210,17 +210,19 @@ public class ActividadPrincipal extends ActividadBase {
         return super.onOptionsItemSelected(item);
     }
 
-    public String obtenerCodigo(String valor){
+    public String obtenerCodigo(boolean tipo, String valor){
         int index = -1;
-        String[] lista = getResources().getStringArray(R.array.lista_paises);
+        String[] lista = (tipo)?getResources().getStringArray(R.array.lista_categorias)
+                :getResources().getStringArray(R.array.lista_paises);
+        String[] listaId = (tipo)?getResources().getStringArray(R.array.lista_codigo_categorias)
+                :getResources().getStringArray(R.array.lista_codigo_paises);
         for (int i=0;i<lista.length;i++) {
             if (lista[i].equals(valor)) {
                 index = i;
                 break;
             }
         }
-        String codigo = getResources().getStringArray(R.array.lista_codigo_paises)[index];
-        return codigo;
+        return listaId[index];
     }
 
     class CustomAdapter extends BaseAdapter {
@@ -280,4 +282,3 @@ public class ActividadPrincipal extends ActividadBase {
         }
     }
 }
-

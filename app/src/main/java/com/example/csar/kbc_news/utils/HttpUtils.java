@@ -84,7 +84,7 @@ public class HttpUtils {
         return call;
     }
 
-    public Call<RespuestaNoticias> callNoticiasCategoriaPais(String categoria, String pais, String q){
+    public Call<RespuestaNoticias> callNoticiasCategoriaPais(String categoria, String q, String pais){
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 

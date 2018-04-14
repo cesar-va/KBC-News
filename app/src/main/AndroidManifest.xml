@@ -33,7 +33,8 @@
         <activity android:name=".actividades.ActividadClima" />
         <activity android:name=".actividades.ActividadMarcadores" />
         <activity android:name=".actividades.ActividadDivisas" />
-        <activity android:name=".actividades.ActividadConfiguracion"></activity>
+        <activity android:name=".actividades.ActividadConfiguracion" />
+        <activity android:name=".actividades.ActividadRegistrar"></activity>
     </application>
 
 </manifest>

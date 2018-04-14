@@ -66,6 +66,7 @@
         <item>ar</item>
         <item>au</item>
         <item>at</item>
+        <item>be</item>
         <item>br</item>
         <item>bg</item>
         <item>ca</item>
@@ -118,7 +119,7 @@
         <item>ve</item>
     </string-array>
 
-    <string-array name="lista_categorias">
+    <string-array name="lista_codigo_categorias">
         <item>business</item>
         <item>entertainment</item>
         <item>general</item>
@@ -126,6 +127,16 @@
         <item>science</item>
         <item>sports</item>
         <item>technology</item>
+    </string-array>
+
+    <string-array name="lista_categorias">
+        <item>Negocios</item>
+        <item>Entretenimiento</item>
+        <item>General</item>
+        <item>Salud</item>
+        <item>Ciencia</item>
+        <item>Deportes</item>
+        <item>Tecnología</item>
     </string-array>
 
 </resources>
