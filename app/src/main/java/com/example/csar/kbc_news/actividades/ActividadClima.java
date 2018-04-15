@@ -1,6 +1,5 @@
 package com.example.csar.kbc_news.actividades;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -8,20 +7,34 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.FrameLayout;
 
 import com.example.csar.kbc_news.R;
+import com.example.csar.kbc_news.modelos.clima.Clima;
+import com.example.csar.kbc_news.modelos.clima.RespuestaClima;
+import com.example.csar.kbc_news.modelos.noticias.RespuestaNoticias;
 import com.example.csar.kbc_news.utils.Constantes;
 import com.example.csar.kbc_news.utils.HttpUtils;
 
-public class ActividadClima extends ActividadBase {
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class ActividadClima extends ActividadBase {
+    ArrayList<Clima> weather;
     HttpUtils httpUtils = new HttpUtils();
     private static final int REQUEST_LOCATION = 1;
     private LocationManager locationManager;
+    private String localizacion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,13 +44,62 @@ public class ActividadClima extends ActividadBase {
         //NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         //navigationView.getMenu().getItem(0).setChecked(true);
 
-        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+        //Comentar esto si se ejecuta desde un dispositivo real
+        this.httpUtils.confiarTodosCertificados();
+        localizacion = obtenerUbicacionActual();
+        List<String> d = Arrays.asList(localizacion.split(","));
+        getClimaLatLon(d.get(0),d.get(1));
+        //getClimaCiudad("London,uk");
+    }
 
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
-            mensajeNoTieneGPS();
-        else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
-            MensajeOK(obtenerUbicacionActual());
+    public void MensajeOK(String msg) {
+        View v1 = getWindow().getDecorView().getRootView();
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(v1.getContext());
+        builder1.setMessage(msg);
+        builder1.setCancelable(true);
+        builder1.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+        AlertDialog alert11 = builder1.create();
+        alert11.show();
+    }
+
+    public void getClimaCiudad(String q){
+        Call<RespuestaClima> call = this.httpUtils.callClimaActualCiudad(q);
+        call.enqueue(new Callback<RespuestaClima>() {
+            @Override
+            public void onResponse(@NonNull Call<RespuestaClima> call, @NonNull Response<RespuestaClima> response) {
+                // Aqui se pone la acción que se ejcutaría una vez que el servidor retorna los datos
+                if (response.isSuccessful() && response.body().getWeather() != null)
+                    weather = response.body().getWeather();
+                    MensajeOK(weather.toString());
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<RespuestaClima> call, @NonNull Throwable t) {
+                System.out.println("Error");
+            }
+        });
+    }
+
+    public void getClimaLatLon(String lat, String lon){
+        Call<RespuestaClima> call = this.httpUtils.callClimaActualLatLon(lat,lon);
+        call.enqueue(new Callback<RespuestaClima>() {
+            @Override
+            public void onResponse(@NonNull Call<RespuestaClima> call, @NonNull Response<RespuestaClima> response) {
+                // Aqui se pone la acción que se ejcutaría una vez que el servidor retorna los datos
+                if (response.isSuccessful() && response.body().getWeather() != null)
+                    weather = response.body().getWeather();
+                MensajeOK(weather.toString());
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<RespuestaClima> call, @NonNull Throwable t) {
+                System.out.println("Error");
+            }
+        });
     }
 
     private String obtenerUbicacionActual() {
@@ -91,20 +153,6 @@ public class ActividadClima extends ActividadBase {
                 });
         final AlertDialog alert = builder.create();
         alert.show();
-    }
-
-    public void MensajeOK(String msg) {
-        View v1 = getWindow().getDecorView().getRootView();
-        AlertDialog.Builder builder1 = new AlertDialog.Builder(v1.getContext());
-        builder1.setMessage(msg);
-        builder1.setCancelable(true);
-        builder1.setPositiveButton("OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                    }
-                });
-        AlertDialog alert11 = builder1.create();
-        alert11.show();
     }
 }
 
