@@ -64,10 +64,10 @@ public class ActividadPrincipal extends ActividadBase {
         getLayoutInflater().inflate(layout.activity_main, contentFrameLayout);
         getSupportActionBar().setTitle("Explorador");
 
+
         //Comentar esto si se ejecuta desde un dispositivo real
         this.httpUtils.confiarTodosCertificados();
         todasNoticias = (ListView) findViewById(newsContainer);
-
         cargarNoticiasRecientes();
 
         final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(id.swipe_container);
@@ -178,6 +178,10 @@ public class ActividadPrincipal extends ActividadBase {
                return true;
             }
         });
+
+        if(mAuth.getInstance().getCurrentUser() == null){
+            menu.getItem(1).setVisible(false);
+        }
 
         return super.onCreateOptionsMenu(menu);
     }
