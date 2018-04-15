@@ -35,7 +35,7 @@
             android:resource="@array/preloaded_fonts" />
 
         <activity android:name=".actividades.ActividadCuenta" />
-        <activity android:launchMode="singleTask"
+        <activity
             android:name=".actividades.ActividadClima" />
         <activity android:name=".actividades.ActividadMarcadores" />
         <activity android:name=".actividades.ActividadDivisas" />
