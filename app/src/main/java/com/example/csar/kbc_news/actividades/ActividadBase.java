@@ -14,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.csar.kbc_news.R;
 import com.example.csar.kbc_news.utils.VariablesGlobales;
@@ -38,10 +39,20 @@ public class ActividadBase extends AppCompatActivity {
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
 
+        View headerView = navigationView.getHeaderView(0);
+        TextView navUsername = (TextView) headerView.findViewById(R.id.nombreUsuario);
+
+        if(mAuth.getInstance().getCurrentUser() != null)
+            navUsername.setText(mAuth.getInstance().getCurrentUser().getEmail());
+        else
+            navUsername.setText("Invitado");
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
                 final String appPackageName = getPackageName();
+
+
 
                 switch (item.getItemId()) {
                     case R.id.cuenta:

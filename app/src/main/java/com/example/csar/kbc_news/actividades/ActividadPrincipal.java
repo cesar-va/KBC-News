@@ -28,6 +28,8 @@ import com.example.csar.kbc_news.R;
 import com.example.csar.kbc_news.modelos.noticias.Noticia;
 import com.example.csar.kbc_news.modelos.noticias.RespuestaNoticias;
 import com.example.csar.kbc_news.utils.HttpUtils;
+import com.example.csar.kbc_news.utils.VariablesGlobales;
+import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -53,6 +55,7 @@ public class ActividadPrincipal extends ActividadBase {
     Dialog ventana;
     String spinnerCategorias = "";
     String spinnerPaises = "";
+    private FirebaseAuth mAuth = VariablesGlobales.getInstance().getmAuth();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
