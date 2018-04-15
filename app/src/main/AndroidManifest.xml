@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
     <uses-feature android:name="android.hardware.location.gps" />
 
     <application
@@ -37,14 +36,12 @@
 
         <activity android:name=".actividades.ActividadCuenta" />
         <activity
-            android:name=".actividades.ActividadClima"
-            android:launchMode="singleTask" />
+            android:name=".actividades.ActividadClima" />
         <activity android:name=".actividades.ActividadMarcadores" />
         <activity android:name=".actividades.ActividadDivisas" />
         <activity android:name=".actividades.ActividadConfiguracion" />
         <activity android:name=".actividades.ActividadRegistrar" />
-        <activity android:name=".actividades.ActividadInformacionUsuario" />
-        <activity android:name=".actividades.ActividadWeb"></activity>
+        <activity android:name=".actividades.ActividadInformacionUsuario"></activity>
     </application>
 
 </manifest>

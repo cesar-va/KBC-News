@@ -52,8 +52,6 @@ public class ActividadBase extends AppCompatActivity {
             public boolean onNavigationItemSelected(MenuItem item) {
                 final String appPackageName = getPackageName();
 
-
-
                 switch (item.getItemId()) {
                     case R.id.cuenta:
                         if(mAuth.getInstance().getCurrentUser() != null){

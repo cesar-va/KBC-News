@@ -274,8 +274,7 @@ public class ActividadPrincipal extends ActividadBase {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent in = new Intent(getApplicationContext(), ActividadWeb.class);
-                    in.putExtra("url",lNoticias.get(i).getUrl());
+                    Intent in = new Intent(Intent.ACTION_VIEW, Uri.parse(lNoticias.get(i).getUrl()));
                     startActivity(in);
                 }
             });

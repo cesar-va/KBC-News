@@ -1,6 +1,7 @@
 package com.example.csar.kbc_news.actividades;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -48,12 +49,10 @@ public class ActividadClima extends ActividadBase implements LocationListener{
     Sistema sistema;
     String pueblo;
     HttpUtils httpUtils = new HttpUtils();
-    private static final int REQUEST_LOCATION = 1;
     private LocationManager locationManager;
-    private Criteria criterio;
-    private String mejorProvedor;
     private double latitud;
     private double longitud;
+    private boolean tieneGPSActivado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,15 +60,6 @@ public class ActividadClima extends ActividadBase implements LocationListener{
         FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
         getLayoutInflater().inflate(R.layout.actividad_clima, contentFrameLayout);
         getSupportActionBar().setTitle("Clima");
-        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
-
-        obtenerLocalizacion();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        obtenerLocalizacion();
     }
 
     @Override
@@ -78,30 +68,42 @@ public class ActividadClima extends ActividadBase implements LocationListener{
         startActivity(intento);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        obtenerLocalizacion();
+    }
+
     public void obtenerLocalizacion() {
+
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        criterio = new Criteria();
-        mejorProvedor = String.valueOf(locationManager.getBestProvider(criterio, true)).toString();
+        Criteria criterio = new Criteria();
+        String mejorProvedor = String.valueOf(locationManager.getBestProvider(criterio, true)).toString();
 
-        // Se pide permisos para accesar a la ubicación
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        revisarGPS();
 
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            return;
-        }else{
-            // Ya tiene permisos, entonces se trata de accesar a la ultima ubicación y se actualizan la latitud y longitud
-            Location location = locationManager.getLastKnownLocation(mejorProvedor);
-            if (location != null) {
-                latitud = location.getLatitude();
-                longitud = location.getLongitude();
+        if(tieneGPSActivado){
+            // Se pide permisos para accesar a la ubicación
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-                getClimaLatLon(String.valueOf(latitud), String.valueOf(longitud));
-            }
-            // Si no había una ubicación previa, entonces se forza a hacer update de ubicación
-            else{
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                return;
+            }else{
+                if(locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER )){
+                    // Ya tiene permisos, entonces se trata de accesar a la ultima ubicación y se actualizan la latitud y longitud
+                    Location location = locationManager.getLastKnownLocation(mejorProvedor);
+                    if (location != null) {
+                        latitud = location.getLatitude();
+                        longitud = location.getLongitude();
+                        getClimaLatLon(String.valueOf(latitud), String.valueOf(longitud));
+                    }
+                    // Si no había una ubicación previa, entonces se forza a hacer update de ubicación
+                    else{
+                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+                        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+                    }
+                }
             }
         }
     }
@@ -112,17 +114,11 @@ public class ActividadClima extends ActividadBase implements LocationListener{
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
             if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-                if(!locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER )){
-                    Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(myIntent);
-                }else {
                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
                     locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
-                }
             }
-        }
     }
 
     @Override
@@ -134,15 +130,16 @@ public class ActividadClima extends ActividadBase implements LocationListener{
     @Override
     public void onLocationChanged(Location location) {
         // Se cambia la ubicación, entonces se actualizan las variables latitud y longitud
-        locationManager.removeUpdates(this);
-        latitud = location.getLatitude();
-        longitud = location.getLongitude();
-        getClimaLatLon(String.valueOf(latitud), String.valueOf(longitud));
+            locationManager.removeUpdates(this);
+            latitud = location.getLatitude();
+            longitud = location.getLongitude();
+            getClimaLatLon(String.valueOf(latitud), String.valueOf(longitud));
     }
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
-        }
+
+    }
 
     @Override
     public void onProviderEnabled(String provider) {
@@ -154,6 +151,31 @@ public class ActividadClima extends ActividadBase implements LocationListener{
 
     }
 
+    public void revisarGPS(){
+        if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) &&
+                !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+            final AlertDialog.Builder builder =  new AlertDialog.Builder(this);
+
+            tieneGPSActivado = false;
+            builder.setMessage("Servicios de GPS desactivados, ¿Desea ir a ajustes?")
+                    .setPositiveButton("Sí",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface d, int id) {
+                                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                                    d.dismiss();
+                                }
+                            })
+                    .setNegativeButton("No",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface d, int id) {
+                                    startActivity(new Intent(getApplicationContext(), ActividadPrincipal.class));
+                                    d.cancel();
+                                }
+                            });
+            builder.create().show();
+        }
+        tieneGPSActivado = true;
+    }
 
     public void MensajeOK(String msg) {
         View v1 = getWindow().getDecorView().getRootView();
