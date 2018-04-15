@@ -1,5 +1,6 @@
 package com.example.csar.kbc_news.actividades;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,6 +25,8 @@ import com.example.csar.kbc_news.modelos.cambio.RespuestaCambio;
 import com.example.csar.kbc_news.modelos.noticias.Noticia;
 import com.example.csar.kbc_news.modelos.noticias.RespuestaNoticias;
 import com.example.csar.kbc_news.utils.HttpUtils;
+import com.example.csar.kbc_news.utils.VariablesGlobales;
+import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
 import java.io.BufferedReader;
@@ -43,6 +46,7 @@ import retrofit2.http.HEAD;
 public class ActividadDivisas extends ActividadBase {
     HttpUtils httpUtils = new HttpUtils();
     ArrayList<String> listaadjunta = new ArrayList<>();
+    private FirebaseAuth mAuth = VariablesGlobales.getInstance().getmAuth();
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +54,15 @@ public class ActividadDivisas extends ActividadBase {
         FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
         getLayoutInflater().inflate(R.layout.actividad_divisas, contentFrameLayout);
         getSupportActionBar().setTitle("Convertidor de Divisas");
-        ArchivoTextoAdjuntoALista();
+
+        if(mAuth.getInstance().getCurrentUser() != null)
+            ArchivoTextoAdjuntoALista();
+        else{
+            listaadjunta.clear();
+            listaadjunta.add("USD,United States,dollar");
+            listaadjunta.add("EUR,Euro,Eri");
+        }
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,listaadjunta);
         Spinner spinner1 = (Spinner)findViewById(R.id.moneda1);
         Spinner spinner2 = (Spinner)findViewById(R.id.moneda2);
@@ -75,6 +87,12 @@ public class ActividadDivisas extends ActividadBase {
         String moneda1 = "";
         String moneda2 = "";
 
+        // Dialogo de calculando
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Realizando conversión...");
+        progressDialog.show();
+
         EditText e1 = (EditText)findViewById(R.id.cantidad);
         cambio = e1.getText().toString();
 
@@ -95,10 +113,10 @@ public class ActividadDivisas extends ActividadBase {
             public void onResponse(@NonNull Call<RespuestaCambio> call, @NonNull Response<RespuestaCambio> response) {
                 // Aqui se pone la acción que se ejcutaría una vez que el servidor retorna los datos
                 if (response.isSuccessful() && response.body().getCambio() != null) {
+                    progressDialog.dismiss();
                    Cambio cambio = response.body().getCambio();
                     EditText e4 = (EditText)findViewById(R.id.resultado);
                     e4.setText(String.valueOf(cambio.getAmount()));
-                    Mensaje(cambio.getSource());
                 }
             }
 

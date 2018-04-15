@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.example.csar.kbc_news.R;
 import com.example.csar.kbc_news.utils.VariablesGlobales;
@@ -24,10 +25,10 @@ public class ActividadInformacionUsuario extends ActividadBase {
         getLayoutInflater().inflate(R.layout.actividad_informacion_usuario, contentFrameLayout);
         getSupportActionBar().setTitle("Información");
 
-        Mensaje(mAuth.getCurrentUser().getEmail().toString());
+        TextView email = (TextView) findViewById(R.id.emailCampo);
+        email.setText(mAuth.getCurrentUser().getEmail().toString());
 
         Button MiBoton = (Button) findViewById(R.id.botonCerrarSesion);
-
         MiBoton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View arg0) {
