@@ -9,5 +9,4 @@ public class Constantes {
     public static final String CURRENCIES_BASE_URL = "http://api.currencies.zone/v1/";
     public static final String CLIMA_KEY = "1c685eb63b01d87040a281f1f39bbbcc";
     public static final String CLIMA_BASE_URL = "http://api.openweathermap.org/data/2.5/";
-    public static final String ERROR_UBICACION = "1418";
 }

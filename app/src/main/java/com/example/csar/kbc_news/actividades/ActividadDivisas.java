@@ -50,7 +50,7 @@ public class ActividadDivisas extends ActividadBase {
         FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
         getLayoutInflater().inflate(R.layout.actividad_divisas, contentFrameLayout);
 
-        ArchivoTextoAdjuntoALista();
+        /*ArchivoTextoAdjuntoALista();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,listaadjunta);
         Spinner spinner1 = (Spinner)findViewById(R.id.moneda1);
         Spinner spinner2 = (Spinner)findViewById(R.id.moneda2);
@@ -71,12 +71,12 @@ public class ActividadDivisas extends ActividadBase {
 
         });
         //NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        //navigationView.getMenu().getItem(0).setChecked(true);
+        //navigationView.getMenu().getItem(0).setChecked(true);*/
 
     }
 
     public void realizarConversion(){
-        String cambio = "";
+        /*String cambio = "";
         String moneda1 = "";
         String moneda2 = "";
 
@@ -111,10 +111,10 @@ public class ActividadDivisas extends ActividadBase {
             public void onFailure(@NonNull Call<RespuestaCambio> call, @NonNull Throwable t) {
                 System.out.println("Error");
             }
-        });
+        });*/
     }
     private void ArchivoTextoAdjuntoALista() {
-        InputStream miarchivo = getResources().openRawResource(R.raw.paises);
+       /* InputStream miarchivo = getResources().openRawResource(R.raw.paises);
         listaadjunta.clear();
         BufferedReader br = null;
         String line;
@@ -132,10 +132,10 @@ public class ActividadDivisas extends ActividadBase {
                 {e.printStackTrace();}
             }
         }
-        return ;
+        return ;*/
     }
 
-    public void Mensaje(String msg){
-        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();};
+    /*public void Mensaje(String msg){
+        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();};*/
 
 }
