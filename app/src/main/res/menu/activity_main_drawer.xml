@@ -5,29 +5,33 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/cuenta"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Cuenta" />
-        <item
             android:id="@+id/inicio"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_home"
             android:title="Inicio" />
         <item
-            android:id="@+id/categorias"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Categorias" />
-        <item
             android:id="@+id/clima"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_wb_sunny"
             android:title="Clima" />
         <item
             android:id="@+id/cambio"
-            android:title="Tipo de Cambio" />
+            android:title="Tipo de Cambio"
+            android:icon="@drawable/ic_monetization"/>
         <item
             android:id="@+id/marcadores"
-            android:title="Marcadores" />
-        <item
-            android:id="@+id/configuracion"
-            android:title="Configuracion" />
+            android:title="Marcadores"
+            android:icon="@drawable/ic_plus_one"/>
     </group>
+
+    <item android:title="Preferencias">
+        <menu>
+            <item
+                android:id="@+id/cuenta"
+                android:icon="@drawable/ic_account_circle"
+                android:title="Cuenta" />
+            <item
+                android:id="@+id/configuracion"
+                android:icon="@drawable/ic_build"
+                android:title="Configuracion" />
+        </menu>
+    </item>
 </menu>
