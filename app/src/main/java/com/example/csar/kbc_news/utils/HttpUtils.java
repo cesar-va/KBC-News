@@ -1,6 +1,12 @@
 package com.example.csar.kbc_news.utils;
 
+import com.example.csar.kbc_news.modelos.cambio.RespuestaCambio;
+import com.example.csar.kbc_news.modelos.clima.RespuestaClima;
 import com.example.csar.kbc_news.modelos.noticias.RespuestaNoticias;
+import com.example.csar.kbc_news.servicios.cambio.ClienteApiCambio;
+import com.example.csar.kbc_news.servicios.cambio.InterfazApiCambio;
+import com.example.csar.kbc_news.servicios.clima.ClienteApiClima;
+import com.example.csar.kbc_news.servicios.clima.InterfazApiClima;
 import com.example.csar.kbc_news.servicios.noticias.ClienteApi;
 import com.example.csar.kbc_news.servicios.noticias.InterfazApi;
 import com.example.csar.kbc_news.servicios.noticias.interceptadores.ResponseCacheInterceptor;
@@ -116,4 +122,51 @@ public class HttpUtils {
         return call;
     }
 
+    public Call<RespuestaClima> callClimaActualCiudad(String q){
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        this.builder.addNetworkInterceptor(new ResponseCacheInterceptor());
+        //builder.cache(new okhttp3.Cache(new File(App.obtenerInstancia().getCacheDir(), "ResponsesCache"), 10 * 1024 * 1024));
+        this.builder.readTimeout(60, TimeUnit.SECONDS);
+        this.builder.connectTimeout(60, TimeUnit.SECONDS);
+        this.builder.addInterceptor(logging);
+
+        InterfazApiClima request = ClienteApiClima.obtenerCliente(this.builder).create(InterfazApiClima.class);
+
+        Call<RespuestaClima> call = request.obtenerClimaActualCiudad(q,Constantes.CLIMA_KEY);
+        return call;
+    }
+
+    public Call<RespuestaClima> callClimaActualLatLon(String lat, String lon){
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        this.builder.addNetworkInterceptor(new ResponseCacheInterceptor());
+        //builder.cache(new okhttp3.Cache(new File(App.obtenerInstancia().getCacheDir(), "ResponsesCache"), 10 * 1024 * 1024));
+        this.builder.readTimeout(60, TimeUnit.SECONDS);
+        this.builder.connectTimeout(60, TimeUnit.SECONDS);
+        this.builder.addInterceptor(logging);
+
+        InterfazApiClima request = ClienteApiClima.obtenerCliente(this.builder).create(InterfazApiClima.class);
+
+        Call<RespuestaClima> call = request.obtenerClimaActualLatLon(lat,lon,Constantes.CLIMA_KEY);
+        return call;
+    }
+
+    public Call<RespuestaCambio> callCambioDosVariables(String mondeda1, String moneda2, String cantidad){
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        this.builder.addNetworkInterceptor(new ResponseCacheInterceptor());
+        //builder.cache(new okhttp3.Cache(new File(App.obtenerInstancia().getCacheDir(), "ResponsesCache"), 10 * 1024 * 1024));
+        this.builder.readTimeout(60, TimeUnit.SECONDS);
+        this.builder.connectTimeout(60, TimeUnit.SECONDS);
+        this.builder.addInterceptor(logging);
+
+        InterfazApiCambio request = ClienteApiCambio.obtenerCliente(this.builder).create(InterfazApiCambio.class);
+
+        Call<RespuestaCambio> call = request.obtenerCambio(mondeda1,moneda2,"json",cantidad,Constantes.CURRENCIES_KEY);
+        return call;
+    }
 }
