@@ -6,8 +6,8 @@ package com.example.csar.kbc_news.modelos.clima;
 
 public class Principal {
     private double temp;
-    private int pressure;
-    private int humidity;
+    private double pressure;
+    private double humidity;
     private double temp_min;
     private double temp_max;
 
@@ -19,7 +19,7 @@ public class Principal {
         this.temp = temp;
     }
 
-    public int getPressure() {
+    public double getPressure() {
         return pressure;
     }
 
@@ -27,7 +27,7 @@ public class Principal {
         this.pressure = pressure;
     }
 
-    public int getHumidity() {
+    public double getHumidity() {
         return humidity;
     }
 

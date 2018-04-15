@@ -19,7 +19,7 @@ public interface InterfazApiClima {
 
     //Endpoint para obtener las noticias por busqueda avanzada.
     @GET("weather")
-    Call<RespuestaClima> obtenerClimaActualCiudad(@Query("lat") String q,
+    Call<RespuestaClima> obtenerClimaActualCiudad(@Query("q") String q,
                                             @Query("appid") String appid);
 
     @GET("weather")

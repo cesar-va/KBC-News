@@ -1,5 +1,6 @@
 package com.example.csar.kbc_news.actividades;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -44,12 +45,21 @@ public class ActividadClima extends ActividadBase {
         //NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         //navigationView.getMenu().getItem(0).setChecked(true);
 
-        //Comentar esto si se ejecuta desde un dispositivo real
+        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+
+
         this.httpUtils.confiarTodosCertificados();
-        localizacion = obtenerUbicacionActual();
+
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            mensajeNoTieneGPS();
+
+        } else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            localizacion = obtenerUbicacionActual();
+        }
+
         List<String> d = Arrays.asList(localizacion.split(","));
-        getClimaLatLon(d.get(0),d.get(1));
-        //getClimaCiudad("London,uk");
+        getClimaLatLon(d.get(0), d.get(1));
     }
 
     public void MensajeOK(String msg) {
@@ -97,7 +107,7 @@ public class ActividadClima extends ActividadBase {
 
             @Override
             public void onFailure(@NonNull Call<RespuestaClima> call, @NonNull Throwable t) {
-                System.out.println("Error");
+                MensajeOK(t.toString());
             }
         });
     }

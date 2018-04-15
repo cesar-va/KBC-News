@@ -6,7 +6,7 @@ package com.example.csar.kbc_news.modelos.clima;
 
 public class Viento {
     private double speed;
-    private int deg;
+    private double deg;
 
     public double getSpeed() {
         return speed;
@@ -16,7 +16,7 @@ public class Viento {
         this.speed = speed;
     }
 
-    public int getDeg() {
+    public double getDeg() {
         return deg;
     }
 
