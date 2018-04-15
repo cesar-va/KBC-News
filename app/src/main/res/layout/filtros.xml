@@ -9,7 +9,7 @@
 
     <TextView
         android:id="@+id/filtroTexto"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="30dp"
         android:text="Filtros de búsqueda"
@@ -20,7 +20,7 @@
 
     <TableLayout
         android:id="@+id/tableLayout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
@@ -42,13 +42,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="Categoria: "
-                android:textSize="30sp" />
+                android:textSize="18sp" />
 
             <Spinner
                 android:id="@+id/categorias"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:entries="@array/lista_categorias"/>
+                android:entries="@array/lista_categorias" />
         </TableRow>
 
         <TableRow
@@ -62,19 +62,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="País: "
-                android:textSize="30sp" />
+                android:textSize="18sp" />
 
             <Spinner
                 android:id="@+id/paises"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:entries="@array/lista_paises"/>
+                android:entries="@array/lista_paises" />
         </TableRow>
     </TableLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
@@ -89,18 +89,20 @@
         <Button
             android:id="@+id/cancelar"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="Cancelar"
-            android:textSize="30sp" />
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/aceptar"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="Aceptar"
-            android:textSize="30sp" />
+            android:textSize="18sp" />
     </LinearLayout>
 
 </LinearLayout>
