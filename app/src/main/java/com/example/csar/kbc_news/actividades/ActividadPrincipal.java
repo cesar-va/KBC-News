@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.webkit.WebView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -136,9 +137,6 @@ public class ActividadPrincipal extends ActividadBase {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case favorito:
-                Mensaje("Op. 1");
-                break;
             case compartir:
                 Intent i = new Intent(Intent.ACTION_SEND);
                 i.setType("text/plain");
@@ -273,7 +271,8 @@ public class ActividadPrincipal extends ActividadBase {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent in = new Intent(Intent.ACTION_VIEW, Uri.parse(lNoticias.get(i).getUrl()));
+                    Intent in = new Intent(getApplicationContext(), ActividadWeb.class);
+                    in.putExtra("url",lNoticias.get(i).getUrl());
                     startActivity(in);
                 }
             });
