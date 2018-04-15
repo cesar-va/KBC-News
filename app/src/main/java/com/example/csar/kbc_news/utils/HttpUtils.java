@@ -134,7 +134,7 @@ public class HttpUtils {
 
         InterfazApiClima request = ClienteApiClima.obtenerCliente(this.builder).create(InterfazApiClima.class);
 
-        Call<RespuestaClima> call = request.obtenerClimaActualCiudad(q,Constantes.CLIMA_KEY);
+        Call<RespuestaClima> call = request.obtenerClimaActualCiudad(q,Constantes.CLIMA_KEY, "metric");
         return call;
     }
 
@@ -150,7 +150,7 @@ public class HttpUtils {
 
         InterfazApiClima request = ClienteApiClima.obtenerCliente(this.builder).create(InterfazApiClima.class);
 
-        Call<RespuestaClima> call = request.obtenerClimaActualLatLon(lat,lon,Constantes.CLIMA_KEY);
+        Call<RespuestaClima> call = request.obtenerClimaActualLatLon(lat,lon,Constantes.CLIMA_KEY, "metric");
         return call;
     }
 

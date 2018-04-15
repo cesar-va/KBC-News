@@ -60,11 +60,6 @@ public class ActividadBase extends AppCompatActivity {
                         startActivity(inicio);
                         drawerLayout.closeDrawers();
                         break;
-                    case R.id.categorias:
-                        Intent categorias = new Intent(getApplicationContext(), ActividadCategoria.class);
-                        startActivity(categorias);
-                        drawerLayout.closeDrawers();
-                        break;
                     case R.id.clima:
                         Intent clima = new Intent(getApplicationContext(), ActividadClima.class);
                         startActivity(clima);

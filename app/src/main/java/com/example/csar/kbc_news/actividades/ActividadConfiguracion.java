@@ -13,7 +13,6 @@ public class ActividadConfiguracion extends ActividadBase {
         super.onCreate(savedInstanceState);
         FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
         getLayoutInflater().inflate(R.layout.actividad_configuracion, contentFrameLayout);
-        //NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        //navigationView.getMenu().getItem(0).setChecked(true);
+        getSupportActionBar().setTitle("Configuración");
     }
 }

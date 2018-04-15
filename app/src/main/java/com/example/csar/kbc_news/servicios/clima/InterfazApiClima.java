@@ -16,14 +16,15 @@ import retrofit2.http.Query;
 public interface InterfazApiClima {
 
 
-
     //Endpoint para obtener las noticias por busqueda avanzada.
     @GET("weather")
     Call<RespuestaClima> obtenerClimaActualCiudad(@Query("q") String q,
-                                            @Query("appid") String appid);
+                                                  @Query("appid") String appid,
+                                                  @Query("units") String units);
 
     @GET("weather")
     Call<RespuestaClima> obtenerClimaActualLatLon(@Query("lat") String lat,
-                                            @Query("lon") String lon,
-                                            @Query("appid") String appid);
+                                                  @Query("lon") String lon,
+                                                  @Query("appid") String appid,
+                                                  @Query("units") String units);
 }

@@ -14,16 +14,25 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.csar.kbc_news.R;
 import com.example.csar.kbc_news.modelos.clima.Clima;
+import com.example.csar.kbc_news.modelos.clima.Principal;
 import com.example.csar.kbc_news.modelos.clima.RespuestaClima;
+import com.example.csar.kbc_news.modelos.clima.Sistema;
 import com.example.csar.kbc_news.modelos.noticias.RespuestaNoticias;
 import com.example.csar.kbc_news.utils.Constantes;
 import com.example.csar.kbc_news.utils.HttpUtils;
+import com.squareup.picasso.Picasso;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -31,7 +40,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ActividadClima extends ActividadBase {
-    ArrayList<Clima> weather;
+    ArrayList<Clima> clima;
+    Principal principal;
+    Sistema sistema;
+    String pueblo;
     HttpUtils httpUtils = new HttpUtils();
     private static final int REQUEST_LOCATION = 1;
     private LocationManager locationManager;
@@ -42,14 +54,10 @@ public class ActividadClima extends ActividadBase {
         super.onCreate(savedInstanceState);
         FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
         getLayoutInflater().inflate(R.layout.actividad_clima, contentFrameLayout);
-        //NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        //navigationView.getMenu().getItem(0).setChecked(true);
-
+        getSupportActionBar().setTitle("Clima");
         ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
 
-
         this.httpUtils.confiarTodosCertificados();
-
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             mensajeNoTieneGPS();
@@ -58,8 +66,8 @@ public class ActividadClima extends ActividadBase {
             localizacion = obtenerUbicacionActual();
         }
 
-        List<String> d = Arrays.asList(localizacion.split(","));
-        getClimaLatLon(d.get(0), d.get(1));
+        //List<String> d = Arrays.asList(localizacion.split(","));
+        getClimaLatLon("9.97535", "-84.1399");
     }
 
     public void MensajeOK(String msg) {
@@ -76,15 +84,18 @@ public class ActividadClima extends ActividadBase {
         alert11.show();
     }
 
-    public void getClimaCiudad(String q){
+    public void getClimaCiudad(String q) {
         Call<RespuestaClima> call = this.httpUtils.callClimaActualCiudad(q);
         call.enqueue(new Callback<RespuestaClima>() {
             @Override
             public void onResponse(@NonNull Call<RespuestaClima> call, @NonNull Response<RespuestaClima> response) {
                 // Aqui se pone la acción que se ejcutaría una vez que el servidor retorna los datos
-                if (response.isSuccessful() && response.body().getWeather() != null)
-                    weather = response.body().getWeather();
-                    MensajeOK(weather.toString());
+                if (response.isSuccessful() && response.body().getWeather() != null && response.body() != null) {
+                    clima = response.body().getWeather();
+                    principal = response.body().getMain();
+                    sistema = response.body().getSys();
+                    pueblo = response.body().getName();
+                }
             }
 
             @Override
@@ -94,15 +105,19 @@ public class ActividadClima extends ActividadBase {
         });
     }
 
-    public void getClimaLatLon(String lat, String lon){
-        Call<RespuestaClima> call = this.httpUtils.callClimaActualLatLon(lat,lon);
+    public void getClimaLatLon(String lat, String lon) {
+        Call<RespuestaClima> call = this.httpUtils.callClimaActualLatLon(lat, lon);
         call.enqueue(new Callback<RespuestaClima>() {
             @Override
             public void onResponse(@NonNull Call<RespuestaClima> call, @NonNull Response<RespuestaClima> response) {
                 // Aqui se pone la acción que se ejcutaría una vez que el servidor retorna los datos
-                if (response.isSuccessful() && response.body().getWeather() != null)
-                    weather = response.body().getWeather();
-                MensajeOK(weather.toString());
+                if (response.isSuccessful() && response.body().getWeather() != null && response.body() != null) {
+                    clima = response.body().getWeather();
+                    principal = response.body().getMain();
+                    sistema = response.body().getSys();
+                    pueblo = response.body().getName();
+                    mostrarDatos();
+                }
             }
 
             @Override
@@ -129,17 +144,17 @@ public class ActividadClima extends ActividadBase {
             if (location != null) {
                 lat = location.getLatitude();
                 lon = location.getLongitude();
-                return String.valueOf(lat) + "," +  String.valueOf(lon);
+                return String.valueOf(lat) + "," + String.valueOf(lon);
 
             } else if (location1 != null) {
                 lat = location1.getLatitude();
                 lon = location1.getLongitude();
-                return String.valueOf(lat) + "," +  String.valueOf(lon);
+                return String.valueOf(lat) + "," + String.valueOf(lon);
 
             } else if (location2 != null) {
                 lat = location2.getLatitude();
                 lon = location2.getLongitude();
-                return String.valueOf(lat) + "," +  String.valueOf(lon);
+                return String.valueOf(lat) + "," + String.valueOf(lon);
             } else {
                 return Constantes.ERROR_UBICACION;
             }
@@ -164,5 +179,26 @@ public class ActividadClima extends ActividadBase {
         final AlertDialog alert = builder.create();
         alert.show();
     }
+
+     public void mostrarDatos(){
+         TextView ciudad = (TextView) findViewById(R.id.city_field);
+         TextView fecha = (TextView) findViewById(R.id.updated_field);
+         Date currentTime = Calendar.getInstance().getTime();
+         ImageView imagen = (ImageView) findViewById(R.id.weather_icon);
+         TextView temp = (TextView) findViewById(R.id.current_temperature_field);
+         TextView descripcion = (TextView) findViewById(R.id.details_field);
+         TextView medida = (TextView) findViewById(R.id.grados);
+
+         ciudad.setText(pueblo+", "+sistema.getCountry());
+         fecha.setText(currentTime.toString());
+
+         if (clima.get(0).getIcon() != null)
+             Picasso.with(ActividadClima.this).load("http://openweathermap.org/img/w/"+clima.get(0).getIcon()+".png").into(imagen);
+
+         temp.setText(String.valueOf(principal.getTemp()));
+         medida.setText("°C");
+
+         descripcion.setText((CharSequence) clima.get(0).getDescription());
+     }
 }
 

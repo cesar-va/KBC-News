@@ -49,7 +49,7 @@ public class ActividadDivisas extends ActividadBase {
         super.onCreate(savedInstanceState);
         FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
         getLayoutInflater().inflate(R.layout.actividad_divisas, contentFrameLayout);
-
+        getSupportActionBar().setTitle("Convertidor de Divisas");
         ArchivoTextoAdjuntoALista();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,listaadjunta);
         Spinner spinner1 = (Spinner)findViewById(R.id.moneda1);
@@ -58,8 +58,6 @@ public class ActividadDivisas extends ActividadBase {
         spinner2.setAdapter(adapter);
 
         Button MiButton = (Button) findViewById(R.id.convertir);
-
-        //Programamos el evento onclick
 
         MiButton.setOnClickListener(new View.OnClickListener(){
 
@@ -70,9 +68,6 @@ public class ActividadDivisas extends ActividadBase {
             }
 
         });
-        //NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        //navigationView.getMenu().getItem(0).setChecked(true);
-
     }
 
     public void realizarConversion(){

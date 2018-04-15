@@ -1,79 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:launchMode="singleInstance"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="8dp"
+    android:layout_marginTop="8dp"
+    android:orientation="vertical"
+    android:paddingLeft="24dp"
+    android:paddingRight="24dp"
+    android:paddingTop="56dp"
     tools:context="com.example.csar.kbc_news.actividades.ActividadDivisas">
 
-    <!--<RelativeLayout-->
-        <!--android:id="@+id/principal"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--tools:layout_editor_absoluteX="0dp"-->
-        <!--tools:layout_editor_absoluteY="0dp">-->
+    <EditText
+        android:id="@+id/cantidad"
+        style="@android:style/Widget.Holo.EditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Cantidad"
+        android:inputType="textEmailAddress" />
 
-        <!--<EditText-->
-            <!--android:id="@+id/cantidad"-->
-            <!--android:layout_width="600px"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_alignParentTop="true"-->
-            <!--android:layout_centerHorizontal="true"-->
-            <!--android:layout_marginTop="38dp"-->
-            <!--android:ems="10"-->
-            <!--android:inputType="number" />-->
+    <Spinner
+        android:id="@+id/moneda1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/cantidad"
+        android:layout_marginTop="33dp" />
 
-        <!--<TextView-->
-            <!--android:id="@+id/textView"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_below="@+id/moneda1"-->
-            <!--android:layout_centerHorizontal="true"-->
-            <!--android:layout_marginTop="20dp"-->
-            <!--android:text="A"-->
-            <!--android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" />-->
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/moneda1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="A"
+        android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" />
 
-        <!--<Button-->
-            <!--android:id="@+id/convertir"-->
-            <!--android:layout_width="400px"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_above="@+id/resultado"-->
-            <!--android:layout_alignLeft="@+id/resultado"-->
-            <!--android:layout_alignStart="@+id/resultado"-->
-            <!--android:layout_marginBottom="57dp"-->
-            <!--android:text="Convertir" />-->
+    <Spinner
+        android:id="@+id/moneda2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textView"
+        android:layout_marginTop="18dp" />
 
-        <!--<EditText-->
-            <!--android:id="@+id/resultado"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_alignParentBottom="true"-->
-            <!--android:layout_centerHorizontal="true"-->
-            <!--android:layout_marginBottom="123dp"-->
-            <!--android:ems="10"-->
-            <!--android:inputType="textPersonName" />-->
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/convertir"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:layout_marginTop="24dp"
+        android:padding="12dp"
+        android:text="Convertir" />
 
-        <!--<Spinner-->
-            <!--android:id="@+id/moneda1"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_alignParentLeft="true"-->
-            <!--android:layout_alignParentStart="true"-->
-            <!--android:layout_below="@+id/cantidad"-->
-            <!--android:layout_marginTop="33dp" />-->
-
-        <!--<Spinner-->
-            <!--android:id="@+id/moneda2"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_alignParentLeft="true"-->
-            <!--android:layout_alignParentStart="true"-->
-            <!--android:layout_below="@+id/textView"-->
-            <!--android:layout_marginTop="18dp" />-->
-        <!---->
-    <!--</RelativeLayout>-->
-
-
-
-</android.support.constraint.ConstraintLayout>
+    <EditText
+        android:id="@+id/resultado"
+        style="@android:style/Widget.Holo.EditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="false"
+        android:hint="Resultado"
+        android:inputType="textEmailAddress" />
+</LinearLayout>

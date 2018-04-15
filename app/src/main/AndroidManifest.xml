@@ -28,7 +28,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".actividades.ActividadBase" />
-        <activity android:name=".actividades.ActividadCategoria" />
 
         <meta-data
             android:name="preloaded_fonts"

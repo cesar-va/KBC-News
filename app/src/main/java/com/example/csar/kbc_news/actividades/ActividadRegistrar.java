@@ -32,6 +32,7 @@ public class ActividadRegistrar extends ActividadBase {
         setContentView(R.layout.actividad_registrar);
         FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
         getLayoutInflater().inflate(R.layout.actividad_cuenta, contentFrameLayout);
+        getSupportActionBar().setTitle("Registrar Cuenta");
 
         emailEditText = (EditText) findViewById(R.id.campoCorreoRegistro);
         contrasenaEditText = (EditText) findViewById(R.id.campoContrasenaRegistro);
