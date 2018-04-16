@@ -55,13 +55,8 @@ public class ActividadDivisas extends ActividadBase {
         getLayoutInflater().inflate(R.layout.actividad_divisas, contentFrameLayout);
         getSupportActionBar().setTitle("Convertidor de Divisas");
 
-        if(mAuth.getInstance().getCurrentUser() != null)
             ArchivoTextoAdjuntoALista();
-        else{
-            listaadjunta.clear();
-            listaadjunta.add("USD,United States,dollar");
-            listaadjunta.add("EUR,Euro,Eri");
-        }
+
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,listaadjunta);
         Spinner spinner1 = (Spinner)findViewById(R.id.moneda1);
