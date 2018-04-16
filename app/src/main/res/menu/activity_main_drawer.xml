@@ -27,15 +27,25 @@
     </group>
 
     <item android:title="Preferencias">
+    <menu>
+        <item
+            android:id="@+id/cuenta"
+            android:icon="@drawable/ic_account_circle"
+            android:title="Cuenta" />
+        <item
+            android:id="@+id/configuracion"
+            android:icon="@drawable/ic_build"
+            android:title="Configuracion" />
+    </menu>
+</item>
+
+    <item android:title="Enlaces">
         <menu>
             <item
-                android:id="@+id/cuenta"
-                android:icon="@drawable/ic_account_circle"
-                android:title="Cuenta" />
-            <item
-                android:id="@+id/configuracion"
-                android:icon="@drawable/ic_build"
-                android:title="Configuracion" />
+                android:id="@+id/video"
+                android:icon="@drawable/ic_ondemand_video"
+                android:title="Video"
+                tools:ignore="DuplicateIds" />
         </menu>
     </item>
 </menu>

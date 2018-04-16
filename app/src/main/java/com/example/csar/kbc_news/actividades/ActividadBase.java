@@ -2,6 +2,7 @@ package com.example.csar.kbc_news.actividades;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -88,6 +89,10 @@ public class ActividadBase extends AppCompatActivity {
                         Intent configuracion = new Intent(getApplicationContext(), ActividadConfiguracion.class);
                         startActivity(configuracion);
                         drawerLayout.closeDrawers();
+                        break;
+                    case R.id.video:
+                        Uri uri = Uri.parse( "https://www.youtube.com" );
+                        startActivity(new Intent(Intent.ACTION_VIEW, uri));
                         break;
                     default:
                         break;
