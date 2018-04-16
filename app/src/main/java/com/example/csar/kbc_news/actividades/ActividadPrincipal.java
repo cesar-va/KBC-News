@@ -43,7 +43,8 @@ import static com.example.csar.kbc_news.R.drawable;
 import static com.example.csar.kbc_news.R.id;
 import static com.example.csar.kbc_news.R.id.compartir;
 import static com.example.csar.kbc_news.R.id.content_frame;
-import static com.example.csar.kbc_news.R.id.favorito;
+//
+// import static com.example.csar.kbc_news.R.id.favorito;
 import static com.example.csar.kbc_news.R.id.newsContainer;
 import static com.example.csar.kbc_news.R.layout;
 
