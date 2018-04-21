@@ -25,7 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Nombre"
-                android:inputType="text" />
+                android:inputType="textPersonName" />
         </android.support.design.widget.TextInputLayout>
 
         <!-- Email Label -->
@@ -65,12 +65,10 @@
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp">
 
-            <AutoCompleteTextView
+            <Spinner
                 android:id="@+id/campoPais"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="País"
-                android:inputType="text" />
+                android:layout_height="wrap_content" />
         </android.support.design.widget.TextInputLayout>
 
 

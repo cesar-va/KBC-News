@@ -4,12 +4,14 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.csar.kbc_news.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -21,11 +23,14 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class ActividadRegistrar extends ActividadBase {
     private EditText nombreEditText;
     private EditText emailEditText;
     private EditText contrasenaEditText;
-    private EditText paisEditText;
+    private Spinner paisSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +43,7 @@ public class ActividadRegistrar extends ActividadBase {
         nombreEditText = findViewById(R.id.campoNombre);
         emailEditText = findViewById(R.id.campoCorreoRegistro);
         contrasenaEditText = findViewById(R.id.campoContrasenaRegistro);
-        paisEditText = findViewById(R.id.campoPais);
+        paisSpinner = findViewById(R.id.campoPais);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -51,11 +56,12 @@ public class ActividadRegistrar extends ActividadBase {
         });
 
 
-        AutoCompleteTextView textView = findViewById(R.id.campoPais);
-        String[] paises = getResources().getStringArray(R.array.lista_paises);
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, paises);
-        textView.setAdapter(adapter);
+        Spinner textView = findViewById(R.id.campoPais);
+
+        ArrayList<String> paises =  new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.lista_paises)));
+        paises.add(0, "--- País ---");
+        textView.setAdapter(new ArrayAdapter<String>(
+                this, android.R.layout.simple_spinner_item, paises));
     }
 
     public void registrarUsuario() {
@@ -72,7 +78,7 @@ public class ActividadRegistrar extends ActividadBase {
                             if (task.isSuccessful()) {
                                 FirebaseUser usuario = mAuth.getCurrentUser();
                                 ref.child(usuario.getUid()).child("nombre").setValue(nombreEditText.getText().toString());
-                                ref.child(usuario.getUid()).child("pais").setValue(paisEditText.getText().toString());
+                                //ref.child(usuario.getUid()).child("pais").setValue(paisSpinner.getText().toString());
                                 enviarVerificacionEmail();
                                 mAuth.signOut();
                                 progressDialog.dismiss();
@@ -95,7 +101,7 @@ public class ActividadRegistrar extends ActividadBase {
         }
     }
 
-    public void enviarVerificacionEmail(){
+    public void enviarVerificacionEmail() {
         final FirebaseUser usuario = mAuth.getCurrentUser();
         usuario.sendEmailVerification()
                 .addOnCompleteListener(this, new OnCompleteListener() {
@@ -116,8 +122,17 @@ public class ActividadRegistrar extends ActividadBase {
     public boolean validarFormulario() {
         boolean valido = true;
 
+        String nombre = nombreEditText.getText().toString();
         String email = emailEditText.getText().toString();
         String contrasena = contrasenaEditText.getText().toString();
+        String pais = paisSpinner.getSelectedItem().toString();
+
+
+        if(!nombre.matches("^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$")){
+            nombreEditText.setError("Nombre inválido");
+            valido = false;
+        }else
+            nombreEditText.setError(null);
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             emailEditText.setError("Email inválido");
@@ -132,6 +147,12 @@ public class ActividadRegistrar extends ActividadBase {
         } else {
             contrasenaEditText.setError(null);
         }
+
+        if(pais.equals("--- País ---")){
+            TextView errorText = (TextView) paisSpinner.getSelectedView();
+            errorText.setError("Seleccione un pais");
+        }
+
 
         return valido;
     }
