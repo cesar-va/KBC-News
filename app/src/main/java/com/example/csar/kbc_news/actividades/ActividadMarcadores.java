@@ -2,7 +2,6 @@ package com.example.csar.kbc_news.actividades;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
 import android.widget.FrameLayout;
 
 import com.example.csar.kbc_news.R;

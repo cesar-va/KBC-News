@@ -86,7 +86,7 @@ public class ActividadBase extends AppCompatActivity {
                         drawerLayout.closeDrawers();
                         break;
                     case R.id.configuracion:
-                        Intent configuracion = new Intent(getApplicationContext(), ActividadConfiguracion.class);
+                        Intent configuracion = new Intent(getApplicationContext(), ActividadPreferencias.class);
                         startActivity(configuracion);
                         drawerLayout.closeDrawers();
                         break;

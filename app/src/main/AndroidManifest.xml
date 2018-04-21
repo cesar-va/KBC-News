@@ -41,10 +41,15 @@
             android:launchMode="singleTask" />
         <activity android:name=".actividades.ActividadMarcadores" />
         <activity android:name=".actividades.ActividadDivisas" />
-        <activity android:name=".actividades.ActividadConfiguracion" />
         <activity android:name=".actividades.ActividadRegistrar" />
         <activity android:name=".actividades.ActividadInformacionUsuario" />
-        <activity android:name=".actividades.ActividadAutores"></activity>
+        <activity android:name=".actividades.ActividadAutores" />
+        <activity
+            android:name=".actividades.ActividadWeb"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".actividades.ActividadPreferencias"
+            android:label="@string/title_activity_actividad_preferencias"></activity>
     </application>
 
 </manifest>
