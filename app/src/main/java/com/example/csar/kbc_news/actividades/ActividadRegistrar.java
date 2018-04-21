@@ -14,6 +14,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.csar.kbc_news.R;
+import com.example.csar.kbc_news.modelos.cuenta.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -77,8 +78,8 @@ public class ActividadRegistrar extends ActividadBase {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 FirebaseUser usuario = mAuth.getCurrentUser();
-                                ref.child(usuario.getUid()).child("nombre").setValue(nombreEditText.getText().toString());
-                                //ref.child(usuario.getUid()).child("pais").setValue(paisSpinner.getText().toString());
+                                Usuario usr = new Usuario(nombreEditText.getText().toString(), paisSpinner.getSelectedItem().toString());
+                                ref.child(usuario.getUid()).setValue(usr);
                                 enviarVerificacionEmail();
                                 mAuth.signOut();
                                 progressDialog.dismiss();

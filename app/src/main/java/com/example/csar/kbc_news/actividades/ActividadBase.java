@@ -16,9 +16,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.csar.kbc_news.R;
+import com.example.csar.kbc_news.modelos.cuenta.Usuario;
 import com.example.csar.kbc_news.utils.VariablesGlobales;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 public class ActividadBase extends AppCompatActivity {
 
@@ -41,10 +45,19 @@ public class ActividadBase extends AppCompatActivity {
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
 
         View headerView = navigationView.getHeaderView(0);
-        TextView navUsername = (TextView) headerView.findViewById(R.id.nombreUsuario);
+        final TextView navUsername = (TextView) headerView.findViewById(R.id.nombreUsuario);
 
-        if(mAuth.getInstance().getCurrentUser() != null)
-            navUsername.setText(mAuth.getInstance().getCurrentUser().getEmail());
+        if(mAuth.getInstance().getCurrentUser() != null){
+            ref.child(mAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    navUsername.setText(snapshot.getValue(Usuario.class).getNombre());
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+        }
         else
             navUsername.setText("Invitado");
 
@@ -121,6 +134,10 @@ public class ActividadBase extends AppCompatActivity {
     public void startActivity(Intent intent) {
         super.startActivity(intent);
         overridePendingTransitionEnter();
+    }
+
+    public void actualizarNombreUsuarioMenu(){
+
     }
 
     // Overrides the pending Activity transition by performing the "Enter" animation.
