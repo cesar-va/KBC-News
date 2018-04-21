@@ -35,7 +35,7 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".actividades.ActividadCuenta" />
+        <activity android:name=".actividades.ActividadLogin" />
         <activity
             android:name=".actividades.ActividadClima"
             android:launchMode="singleTask" />

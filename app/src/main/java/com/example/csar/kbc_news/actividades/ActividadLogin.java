@@ -18,7 +18,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 
-public class ActividadCuenta extends ActividadBase {
+public class ActividadLogin extends ActividadBase {
     private EditText emailEditText;
     private EditText contrasenaEditText;
 
@@ -26,7 +26,7 @@ public class ActividadCuenta extends ActividadBase {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
-        getLayoutInflater().inflate(R.layout.actividad_cuenta, contentFrameLayout);
+        getLayoutInflater().inflate(R.layout.actividad_login, contentFrameLayout);
         getSupportActionBar().setTitle("Iniciar Sesión");
 
 
@@ -70,9 +70,15 @@ public class ActividadCuenta extends ActividadBase {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                progressDialog.dismiss();
-                                Intent intento = new Intent(getApplicationContext(), ActividadPrincipal.class);
-                                startActivity(intento);
+                                if(mAuth.getCurrentUser().isEmailVerified()){
+                                    progressDialog.dismiss();
+                                    Intent intento = new Intent(getApplicationContext(), ActividadPrincipal.class);
+                                    startActivity(intento);
+                                }else{
+                                    mAuth.signOut();
+                                    emailEditText.setError("Email pendiente de verificación");
+                                    progressDialog.dismiss();
+                                }
                             }
 
                         }
@@ -93,6 +99,8 @@ public class ActividadCuenta extends ActividadBase {
             });
         }
     }
+
+
 
     public boolean validarFormulario() {
         boolean valido = true;
