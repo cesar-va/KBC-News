@@ -8,6 +8,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -21,6 +23,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
+
+import java.util.Date;
 
 public class ActividadRegistrar extends ActividadBase {
     private EditText emailEditText;
@@ -46,9 +50,18 @@ public class ActividadRegistrar extends ActividadBase {
                 registrarUsuario();
             }
         });
+
+
+        AutoCompleteTextView textView = (AutoCompleteTextView) findViewById(R.id.pais);
+
+        String[] countries = getResources().getStringArray(R.array.lista_paises);
+
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, countries);
+        textView.setAdapter(adapter);
     }
 
-    private void registrarUsuario() {
+    public void registrarUsuario() {
         if (validarFormulario()) {
             final ProgressDialog progressDialog  = new ProgressDialog(this);
             progressDialog.setIndeterminate(true);
@@ -79,6 +92,7 @@ public class ActividadRegistrar extends ActividadBase {
             });
         }
     }
+
 
     public boolean validarFormulario() {
         boolean valido = true;

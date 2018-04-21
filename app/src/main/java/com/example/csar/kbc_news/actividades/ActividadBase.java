@@ -22,6 +22,8 @@ import android.widget.TextView;
 import com.example.csar.kbc_news.R;
 import com.example.csar.kbc_news.utils.VariablesGlobales;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class ActividadBase extends AppCompatActivity {
 
@@ -29,6 +31,7 @@ public class ActividadBase extends AppCompatActivity {
     ActionBarDrawerToggle actionBarDrawerToggle;
     Toolbar toolbar;
     protected FirebaseAuth mAuth = VariablesGlobales.getInstance().getmAuth();
+    protected DatabaseReference ref = VariablesGlobales.getInstance().getRef();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -5,12 +5,28 @@
     android:fitsSystemWindows="true">
 
     <LinearLayout
+        android:id="@+id/linearLay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
         android:paddingTop="56dp">
+
+        <!-- Name Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp">
+
+            <EditText
+                android:id="@+id/campoNombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nombre"
+                android:inputType="text" />
+        </android.support.design.widget.TextInputLayout>
 
         <!-- Email Label -->
         <android.support.design.widget.TextInputLayout
@@ -41,6 +57,22 @@
                 android:hint="Contraseña"
                 android:inputType="textPassword" />
         </android.support.design.widget.TextInputLayout>
+
+        <!-- Country Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp">
+
+            <AutoCompleteTextView
+                android:id="@+id/pais"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="País"
+                android:inputType="text" />
+        </android.support.design.widget.TextInputLayout>
+
 
         <!-- Signup Button -->
         <android.support.v7.widget.AppCompatButton
