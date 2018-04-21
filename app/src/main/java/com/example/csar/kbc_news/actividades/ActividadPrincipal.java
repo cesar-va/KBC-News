@@ -1,12 +1,14 @@
 package com.example.csar.kbc_news.actividades;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.text.TextUtils;
+import android.support.v7.app.AlertDialog;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.webkit.WebView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -23,14 +24,12 @@ import android.widget.ListView;
 import android.support.v7.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.csar.kbc_news.R;
 import com.example.csar.kbc_news.modelos.noticias.Noticia;
 import com.example.csar.kbc_news.modelos.noticias.RespuestaNoticias;
 import com.example.csar.kbc_news.utils.HttpUtils;
 import com.example.csar.kbc_news.utils.VariablesGlobales;
-import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -49,7 +48,7 @@ import static com.example.csar.kbc_news.R.id.newsContainer;
 import static com.example.csar.kbc_news.R.layout;
 
 public class ActividadPrincipal extends ActividadBase {
-    HttpUtils httpUtils = new HttpUtils();
+    private HttpUtils httpUtils = VariablesGlobales.getInstance().getHttpUtils();
     List<Noticia> lNoticias;
     String TituloNoticia = "";
     String UrlNoticia = "";
@@ -57,7 +56,6 @@ public class ActividadPrincipal extends ActividadBase {
     Dialog ventana;
     String spinnerCategorias = "";
     String spinnerPaises = "";
-    private FirebaseAuth mAuth = VariablesGlobales.getInstance().getmAuth();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +63,6 @@ public class ActividadPrincipal extends ActividadBase {
         FrameLayout contentFrameLayout = (FrameLayout) findViewById(content_frame);
         getLayoutInflater().inflate(layout.activity_main, contentFrameLayout);
         getSupportActionBar().setTitle("Explorador");
-
 
         //Comentar esto si se ejecuta desde un dispositivo real
         this.httpUtils.confiarTodosCertificados();
@@ -87,6 +84,12 @@ public class ActividadPrincipal extends ActividadBase {
     }
 
     public void cargarNoticiasBusquedaAvanzada(String categoria, String q, String pais){
+
+        final ProgressDialog progressDialog  = new ProgressDialog(this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Cargando noticias...");
+        progressDialog.show();
+
         // Callback para obtener noticias por pais
         Call<RespuestaNoticias> call = (q.equals("")) ?this.httpUtils.callNoticiasCategoriaPaisSinQ(categoria, pais):
                 this.httpUtils.callNoticiasCategoriaPais(categoria, q, pais);
@@ -99,17 +102,24 @@ public class ActividadPrincipal extends ActividadBase {
                     lNoticias = response.body().getArticles();
                     CustomAdapter cA = new CustomAdapter();
                     todasNoticias.setAdapter(cA);
+                    progressDialog.dismiss();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<RespuestaNoticias> call, @NonNull Throwable t) {
-                System.out.println("Error");
+                progressDialog.dismiss();
+                mensaje("Ocurrió un problema al cargar las noticias, inténtelo de nuevo");
             }
         });
     }
 
     public void cargarNoticiasRecientes() {
+        final ProgressDialog progressDialog  = new ProgressDialog(this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Cargando noticias...");
+        progressDialog.show();
+
         // Callback para obtener noticias por pais
         Call<RespuestaNoticias> call = this.httpUtils.callNoticiasPorPais("us");
         call.enqueue(new Callback<RespuestaNoticias>() {
@@ -120,12 +130,14 @@ public class ActividadPrincipal extends ActividadBase {
                     lNoticias = response.body().getArticles();
                     CustomAdapter cA = new CustomAdapter();
                     todasNoticias.setAdapter(cA);
+                    progressDialog.dismiss();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<RespuestaNoticias> call, @NonNull Throwable t) {
-                System.out.println("Error");
+                progressDialog.dismiss();
+                mensaje("Ocurrió un problema al cargar las noticias, inténtelo de nuevo");
             }
         });
     }
@@ -152,10 +164,6 @@ public class ActividadPrincipal extends ActividadBase {
                 break;
         }
         return true;
-    }
-
-    public void Mensaje(String msg) {
-        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

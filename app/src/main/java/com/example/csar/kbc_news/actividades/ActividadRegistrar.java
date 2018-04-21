@@ -20,9 +20,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 
 public class ActividadRegistrar extends ActividadBase {
-    private FirebaseAuth mAuth = VariablesGlobales.getInstance().getmAuth();
     private EditText emailEditText;
     private EditText contrasenaEditText;
 
@@ -68,10 +68,13 @@ public class ActividadRegistrar extends ActividadBase {
                     }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    if (e instanceof FirebaseAuthUserCollisionException) {
-                        progressDialog.dismiss();
+                    progressDialog.dismiss();
+                    if (e instanceof FirebaseAuthUserCollisionException)
                         emailEditText.setError("Ya existe un usuario con ese correo");
-                    }
+                    else if(e instanceof FirebaseAuthWeakPasswordException)
+                        contrasenaEditText.setError("La contraseña es muy débil");
+                    else
+                        mensaje("Ocurrió un problema al registrar la cuenta, inténtelo de nuevo");
                 }
             });
         }
@@ -98,19 +101,5 @@ public class ActividadRegistrar extends ActividadBase {
         }
 
         return valido;
-    }
-
-    public void Mensaje(String msg) {
-        View v1 = getWindow().getDecorView().getRootView();
-        AlertDialog.Builder builder1 = new AlertDialog.Builder(v1.getContext());
-        builder1.setMessage(msg);
-        builder1.setCancelable(true);
-        builder1.setPositiveButton("OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                    }
-                });
-        AlertDialog alert11 = builder1.create();
-        alert11.show();
     }
 }

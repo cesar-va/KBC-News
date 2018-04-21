@@ -25,10 +25,8 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 
 public class ActividadCuenta extends ActividadBase {
-    private FirebaseAuth mAuth = VariablesGlobales.getInstance().getmAuth();
     private EditText emailEditText;
     private EditText contrasenaEditText;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +58,12 @@ public class ActividadCuenta extends ActividadBase {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intento = new Intent(getApplicationContext(), ActividadPrincipal.class);
+        startActivity(intento);
+    }
+
     public void login() {
         if(validarFormulario()) {
             final ProgressDialog progressDialog = new ProgressDialog(this);
@@ -84,11 +88,12 @@ public class ActividadCuenta extends ActividadBase {
                     if (e instanceof FirebaseAuthInvalidUserException) {
                         progressDialog.dismiss();
                         emailEditText.setError("No existe cuenta con este correo");
-                    }
-                    if (e instanceof FirebaseAuthInvalidCredentialsException) {
+                    }else if (e instanceof FirebaseAuthInvalidCredentialsException) {
                         progressDialog.dismiss();
                         contrasenaEditText.setError("Contraseña incorrecta");
-
+                    }else{
+                        progressDialog.dismiss();
+                        mensaje("Ocurrió un problema al iniciar sesión, inténtelo de nuevo");
                     }
                 }
             });
@@ -118,17 +123,4 @@ public class ActividadCuenta extends ActividadBase {
         return valido;
     }
 
-    public void Mensaje(String msg) {
-        View v1 = getWindow().getDecorView().getRootView();
-        AlertDialog.Builder builder1 = new AlertDialog.Builder(v1.getContext());
-        builder1.setMessage(msg);
-        builder1.setCancelable(true);
-        builder1.setPositiveButton("OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                    }
-                });
-        AlertDialog alert11 = builder1.create();
-        alert11.show();
-    }
 }

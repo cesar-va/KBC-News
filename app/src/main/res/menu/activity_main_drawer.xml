@@ -20,10 +20,6 @@
             android:id="@+id/marcadores"
             android:title="Marcadores"
             android:icon="@drawable/ic_plus_one"/>
-        <item
-            android:id="@+id/video"
-            android:title="Ver video"
-            android:icon="@drawable/ic_plus_one"/>
     </group>
 
     <item android:title="Preferencias">
@@ -46,6 +42,13 @@
                 android:icon="@drawable/ic_ondemand_video"
                 android:title="Video"
                 tools:ignore="DuplicateIds" />
+        </menu>
+    </item>
+    <item android:title="Otros">
+        <menu>
+            <item
+                android:id="@+id/autores"
+                android:title="Autores" />
         </menu>
     </item>
 </menu>

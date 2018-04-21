@@ -1,12 +1,14 @@
 package com.example.csar.kbc_news.actividades;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -26,7 +28,7 @@ public class ActividadBase extends AppCompatActivity {
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle actionBarDrawerToggle;
     Toolbar toolbar;
-    private FirebaseAuth mAuth = VariablesGlobales.getInstance().getmAuth();
+    protected FirebaseAuth mAuth = VariablesGlobales.getInstance().getmAuth();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,9 +93,12 @@ public class ActividadBase extends AppCompatActivity {
                         drawerLayout.closeDrawers();
                         break;
                     case R.id.video:
-                        Uri uri = Uri.parse( "https://www.youtube.com" );
+                        Uri uri = Uri.parse( "https://www.youtube.com/watch?v=c0xDkPsqfEM" );
                         startActivity(new Intent(Intent.ACTION_VIEW, uri));
                         break;
+                    case R.id.autores:
+                            startActivity(new Intent(getApplicationContext(), ActividadAutores.class));
+                            break;
                     default:
                         break;
                 }
@@ -128,5 +133,19 @@ public class ActividadBase extends AppCompatActivity {
     // Overrides the pending Activity transition by performing the "Exit" animation.
     protected void overridePendingTransitionExit() {
         overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
+    }
+
+    public void mensaje(String msg) {
+        View v1 = getWindow().getDecorView().getRootView();
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(v1.getContext());
+        builder1.setMessage(msg);
+        builder1.setCancelable(true);
+        builder1.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+        AlertDialog alert11 = builder1.create();
+        alert11.show();
     }
 }

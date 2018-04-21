@@ -42,6 +42,7 @@ public class HttpUtils {
                     new X509TrustManager() {
                         @Override
                         public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+
                         }
 
                         @Override
@@ -74,7 +75,7 @@ public class HttpUtils {
         }
     }
 
-    public Call<RespuestaNoticias> callNoticiasPorPais(String pais){
+    public void prepararBuilder(){
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
@@ -84,88 +85,52 @@ public class HttpUtils {
         this.builder.connectTimeout(60, TimeUnit.SECONDS);
         this.builder.addInterceptor(logging);
 
-        InterfazApi request = ClienteApi.obtenerCliente(this.builder).create(InterfazApi.class);
+    }
 
+    public Call<RespuestaNoticias> callNoticiasPorPais(String pais){
+        prepararBuilder();
+
+        InterfazApi request = ClienteApi.obtenerCliente(this.builder).create(InterfazApi.class);
         Call<RespuestaNoticias> call = request.obtenerUltimasNoticias(pais, Constantes.NEWS_API_KEY);
         return call;
     }
 
     public Call<RespuestaNoticias> callNoticiasCategoriaPais(String categoria, String q, String pais){
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        this.builder.addNetworkInterceptor(new ResponseCacheInterceptor());
-        //builder.cache(new okhttp3.Cache(new File(App.obtenerInstancia().getCacheDir(), "ResponsesCache"), 10 * 1024 * 1024));
-        this.builder.readTimeout(60, TimeUnit.SECONDS);
-        this.builder.connectTimeout(60, TimeUnit.SECONDS);
-        this.builder.addInterceptor(logging);
+        prepararBuilder();
 
         InterfazApi request = ClienteApi.obtenerCliente(this.builder).create(InterfazApi.class);
-
         Call<RespuestaNoticias> call = request.obtenerNoticiasCategoriaPais(categoria, pais, q,Constantes.NEWS_API_KEY);
         return call;
     }
 
     public Call<RespuestaNoticias> callNoticiasCategoriaPaisSinQ(String categoria, String pais){
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        this.builder.addNetworkInterceptor(new ResponseCacheInterceptor());
-        //builder.cache(new okhttp3.Cache(new File(App.obtenerInstancia().getCacheDir(), "ResponsesCache"), 10 * 1024 * 1024));
-        this.builder.readTimeout(60, TimeUnit.SECONDS);
-        this.builder.connectTimeout(60, TimeUnit.SECONDS);
-        this.builder.addInterceptor(logging);
+        prepararBuilder();
 
         InterfazApi request = ClienteApi.obtenerCliente(this.builder).create(InterfazApi.class);
-
         Call<RespuestaNoticias> call = request.obtenerNoticiasCategoriaPaisSinQ(categoria, pais,Constantes.NEWS_API_KEY);
         return call;
     }
 
     public Call<RespuestaClima> callClimaActualCiudad(String q){
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        this.builder.addNetworkInterceptor(new ResponseCacheInterceptor());
-        //builder.cache(new okhttp3.Cache(new File(App.obtenerInstancia().getCacheDir(), "ResponsesCache"), 10 * 1024 * 1024));
-        this.builder.readTimeout(60, TimeUnit.SECONDS);
-        this.builder.connectTimeout(60, TimeUnit.SECONDS);
-        this.builder.addInterceptor(logging);
+        prepararBuilder();
 
         InterfazApiClima request = ClienteApiClima.obtenerCliente(this.builder).create(InterfazApiClima.class);
-
         Call<RespuestaClima> call = request.obtenerClimaActualCiudad(q,Constantes.CLIMA_KEY, "metric");
         return call;
     }
 
     public Call<RespuestaClima> callClimaActualLatLon(String lat, String lon){
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        this.builder.addNetworkInterceptor(new ResponseCacheInterceptor());
-        //builder.cache(new okhttp3.Cache(new File(App.obtenerInstancia().getCacheDir(), "ResponsesCache"), 10 * 1024 * 1024));
-        this.builder.readTimeout(60, TimeUnit.SECONDS);
-        this.builder.connectTimeout(60, TimeUnit.SECONDS);
-        this.builder.addInterceptor(logging);
+        prepararBuilder();
 
         InterfazApiClima request = ClienteApiClima.obtenerCliente(this.builder).create(InterfazApiClima.class);
-
         Call<RespuestaClima> call = request.obtenerClimaActualLatLon(lat,lon,Constantes.CLIMA_KEY, "metric");
         return call;
     }
 
     public Call<RespuestaCambio> callCambioDosVariables(String mondeda1, String moneda2, String cantidad){
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        this.builder.addNetworkInterceptor(new ResponseCacheInterceptor());
-        //builder.cache(new okhttp3.Cache(new File(App.obtenerInstancia().getCacheDir(), "ResponsesCache"), 10 * 1024 * 1024));
-        this.builder.readTimeout(60, TimeUnit.SECONDS);
-        this.builder.connectTimeout(60, TimeUnit.SECONDS);
-        this.builder.addInterceptor(logging);
+        prepararBuilder();
 
         InterfazApiCambio request = ClienteApiCambio.obtenerCliente(this.builder).create(InterfazApiCambio.class);
-
         Call<RespuestaCambio> call = request.obtenerCambio(mondeda1,moneda2,"json",cantidad,Constantes.CURRENCIES_KEY);
         return call;
     }

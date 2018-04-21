@@ -44,10 +44,8 @@ import retrofit2.http.HEAD;
 
 
 public class ActividadDivisas extends ActividadBase {
-    HttpUtils httpUtils = new HttpUtils();
+    private HttpUtils httpUtils = VariablesGlobales.getInstance().getHttpUtils();
     ArrayList<String> listaadjunta = new ArrayList<>();
-    private FirebaseAuth mAuth = VariablesGlobales.getInstance().getmAuth();
-
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +53,7 @@ public class ActividadDivisas extends ActividadBase {
         getLayoutInflater().inflate(R.layout.actividad_divisas, contentFrameLayout);
         getSupportActionBar().setTitle("Convertidor de Divisas");
 
-            ArchivoTextoAdjuntoALista();
+        ArchivoTextoAdjuntoALista();
 
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,listaadjunta);
@@ -75,6 +73,12 @@ public class ActividadDivisas extends ActividadBase {
             }
 
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intento = new Intent(getApplicationContext(), ActividadPrincipal.class);
+        startActivity(intento);
     }
 
     public void realizarConversion(){
@@ -99,7 +103,7 @@ public class ActividadDivisas extends ActividadBase {
         moneda2 = e3.getSelectedItem().toString();
         List<String> op2 = Arrays.asList(moneda2.split(","));
 
-        //Mensaje(op1.get(0) + " " + op2.get(0));
+        //mensaje(op1.get(0) + " " + op2.get(0));
 
         this.httpUtils.confiarTodosCertificados();
         Call<RespuestaCambio> call = this.httpUtils.callCambioDosVariables(op1.get(0),op2.get(0),cambio);
@@ -142,8 +146,4 @@ public class ActividadDivisas extends ActividadBase {
         }
         return ;
     }
-
-    public void Mensaje(String msg){
-        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();};
-
 }

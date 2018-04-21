@@ -1,7 +1,6 @@
 package com.example.csar.kbc_news.actividades;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,18 +25,13 @@ import com.example.csar.kbc_news.modelos.clima.Clima;
 import com.example.csar.kbc_news.modelos.clima.Principal;
 import com.example.csar.kbc_news.modelos.clima.RespuestaClima;
 import com.example.csar.kbc_news.modelos.clima.Sistema;
-import com.example.csar.kbc_news.modelos.noticias.RespuestaNoticias;
-import com.example.csar.kbc_news.utils.Constantes;
 import com.example.csar.kbc_news.utils.HttpUtils;
+import com.example.csar.kbc_news.utils.VariablesGlobales;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -48,7 +42,7 @@ public class ActividadClima extends ActividadBase implements LocationListener{
     Principal principal;
     Sistema sistema;
     String pueblo;
-    HttpUtils httpUtils = new HttpUtils();
+    private HttpUtils httpUtils = VariablesGlobales.getInstance().getHttpUtils();
     private LocationManager locationManager;
     private double latitud;
     private double longitud;
@@ -177,19 +171,7 @@ public class ActividadClima extends ActividadBase implements LocationListener{
         tieneGPSActivado = true;
     }
 
-    public void MensajeOK(String msg) {
-        View v1 = getWindow().getDecorView().getRootView();
-        AlertDialog.Builder builder1 = new AlertDialog.Builder(v1.getContext());
-        builder1.setMessage(msg);
-        builder1.setCancelable(true);
-        builder1.setPositiveButton("OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                    }
-                });
-        AlertDialog alert11 = builder1.create();
-        alert11.show();
-    }
+
 
     public void getClimaCiudad(String q) {
         Call<RespuestaClima> call = this.httpUtils.callClimaActualCiudad(q);
@@ -229,7 +211,7 @@ public class ActividadClima extends ActividadBase implements LocationListener{
 
             @Override
             public void onFailure(@NonNull Call<RespuestaClima> call, @NonNull Throwable t) {
-                MensajeOK(t.toString());
+                mensaje(t.toString());
             }
         });
     }

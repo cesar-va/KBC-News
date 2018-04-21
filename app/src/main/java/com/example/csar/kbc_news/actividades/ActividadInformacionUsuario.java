@@ -16,8 +16,6 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class ActividadInformacionUsuario extends ActividadBase {
 
-    private FirebaseAuth mAuth = VariablesGlobales.getInstance().getmAuth();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,17 +38,10 @@ public class ActividadInformacionUsuario extends ActividadBase {
 
     }
 
-    public void Mensaje(String msg) {
-        View v1 = getWindow().getDecorView().getRootView();
-        AlertDialog.Builder builder1 = new AlertDialog.Builder(v1.getContext());
-        builder1.setMessage(msg);
-        builder1.setCancelable(true);
-        builder1.setPositiveButton("OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                    }
-                });
-        AlertDialog alert11 = builder1.create();
-        alert11.show();
+    @Override
+    public void onBackPressed() {
+        Intent intento = new Intent(getApplicationContext(), ActividadPrincipal.class);
+        startActivity(intento);
     }
+
 }
