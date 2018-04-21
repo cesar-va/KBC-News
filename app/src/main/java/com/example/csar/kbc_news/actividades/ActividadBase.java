@@ -1,6 +1,5 @@
 package com.example.csar.kbc_news.actividades;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,19 +10,15 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.ContextMenu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.csar.kbc_news.R;
 import com.example.csar.kbc_news.utils.VariablesGlobales;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class ActividadBase extends AppCompatActivity {
 
@@ -64,7 +59,7 @@ public class ActividadBase extends AppCompatActivity {
                             Intent cuenta = new Intent(getApplicationContext(), ActividadInformacionUsuario.class);
                             startActivity(cuenta);
                         }else{
-                            Intent cuenta = new Intent(getApplicationContext(), ActividadCuenta.class);
+                            Intent cuenta = new Intent(getApplicationContext(), ActividadLogin.class);
                             startActivity(cuenta);
                         }
 
@@ -138,10 +133,10 @@ public class ActividadBase extends AppCompatActivity {
         overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
     }
 
-    public void mensaje(String msg) {
+    public void mensaje(String mensaje) {
         View v1 = getWindow().getDecorView().getRootView();
         AlertDialog.Builder builder1 = new AlertDialog.Builder(v1.getContext());
-        builder1.setMessage(msg);
+        builder1.setMessage(mensaje);
         builder1.setCancelable(true);
         builder1.setPositiveButton("OK",
                 new DialogInterface.OnClickListener() {
@@ -150,5 +145,9 @@ public class ActividadBase extends AppCompatActivity {
                 });
         AlertDialog alert11 = builder1.create();
         alert11.show();
+    }
+
+    public void mensajeToast(String mensaje){
+        Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_SHORT).show();
     }
 }

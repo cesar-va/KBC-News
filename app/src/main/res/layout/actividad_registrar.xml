@@ -66,7 +66,7 @@
             android:layout_marginTop="8dp">
 
             <AutoCompleteTextView
-                android:id="@+id/pais"
+                android:id="@+id/campoPais"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="País"
