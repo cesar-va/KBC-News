@@ -2,32 +2,20 @@ package com.example.csar.kbc_news.actividades;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.view.Gravity;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.csar.kbc_news.R;
 import com.example.csar.kbc_news.modelos.cambio.Cambio;
 import com.example.csar.kbc_news.modelos.cambio.RespuestaCambio;
-import com.example.csar.kbc_news.modelos.noticias.Noticia;
-import com.example.csar.kbc_news.modelos.noticias.RespuestaNoticias;
 import com.example.csar.kbc_news.utils.HttpUtils;
 import com.example.csar.kbc_news.utils.VariablesGlobales;
-import com.google.firebase.auth.FirebaseAuth;
-import com.squareup.picasso.Picasso;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -40,7 +28,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.HEAD;
 
 
 public class ActividadDivisas extends ActividadBase {

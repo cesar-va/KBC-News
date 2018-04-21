@@ -48,6 +48,7 @@
         <menu>
             <item
                 android:id="@+id/autores"
+                android:icon="@drawable/ic_group"
                 android:title="Autores" />
         </menu>
     </item>

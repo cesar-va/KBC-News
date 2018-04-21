@@ -1,12 +1,9 @@
 package com.example.csar.kbc_news.actividades;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,15 +11,12 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.example.csar.kbc_news.R;
-import com.example.csar.kbc_news.utils.VariablesGlobales;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 
 public class ActividadCuenta extends ActividadBase {
     private EditText emailEditText;

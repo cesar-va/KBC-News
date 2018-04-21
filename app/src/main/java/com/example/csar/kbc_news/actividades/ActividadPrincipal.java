@@ -2,13 +2,11 @@ package com.example.csar.kbc_news.actividades;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.SearchView;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,7 +19,6 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.support.v7.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -42,10 +39,11 @@ import static com.example.csar.kbc_news.R.drawable;
 import static com.example.csar.kbc_news.R.id;
 import static com.example.csar.kbc_news.R.id.compartir;
 import static com.example.csar.kbc_news.R.id.content_frame;
-//
-// import static com.example.csar.kbc_news.R.id.favorito;
 import static com.example.csar.kbc_news.R.id.newsContainer;
 import static com.example.csar.kbc_news.R.layout;
+
+//
+// import static com.example.csar.kbc_news.R.id.favorito;
 
 public class ActividadPrincipal extends ActividadBase {
     private HttpUtils httpUtils = VariablesGlobales.getInstance().getHttpUtils();
@@ -287,7 +285,8 @@ public class ActividadPrincipal extends ActividadBase {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent in = new Intent(Intent.ACTION_VIEW, Uri.parse(lNoticias.get(i).getUrl()));
+                    Intent in = new Intent(getApplicationContext(), ActividadWeb.class);
+                    in.putExtra("URL",lNoticias.get(i).getUrl());
                     startActivity(in);
                 }
             });
