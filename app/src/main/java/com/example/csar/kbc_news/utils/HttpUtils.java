@@ -2,11 +2,14 @@ package com.example.csar.kbc_news.utils;
 
 import com.example.csar.kbc_news.modelos.cambio.RespuestaCambio;
 import com.example.csar.kbc_news.modelos.clima.RespuestaClima;
+import com.example.csar.kbc_news.modelos.deportes.RespuestaDeportes;
 import com.example.csar.kbc_news.modelos.noticias.RespuestaNoticias;
 import com.example.csar.kbc_news.servicios.cambio.ClienteApiCambio;
 import com.example.csar.kbc_news.servicios.cambio.InterfazApiCambio;
 import com.example.csar.kbc_news.servicios.clima.ClienteApiClima;
 import com.example.csar.kbc_news.servicios.clima.InterfazApiClima;
+import com.example.csar.kbc_news.servicios.deportes.ClienteApiDeportes;
+import com.example.csar.kbc_news.servicios.deportes.InterfazApiDeportes;
 import com.example.csar.kbc_news.servicios.noticias.ClienteApi;
 import com.example.csar.kbc_news.servicios.noticias.InterfazApi;
 import com.example.csar.kbc_news.servicios.noticias.interceptadores.ResponseCacheInterceptor;
@@ -134,4 +137,25 @@ public class HttpUtils {
         Call<RespuestaCambio> call = request.obtenerCambio(mondeda1,moneda2,"json",cantidad,Constantes.CURRENCIES_KEY);
         return call;
     }
+
+
+    public Call<RespuestaDeportes> callDeportesResultados(String liga, String language, String date){
+        prepararBuilder();
+
+        InterfazApiDeportes request = ClienteApiDeportes.obtenerResultados(this.builder).create(InterfazApiDeportes.class);
+        Call<RespuestaDeportes> call = null;
+        switch(liga){
+            case "Continente Americano": call = request.obtenerResultados("am",language,date,Constantes.SPORTRADAR_KEY_AM);
+                break;
+            case "Continente Asiático": call = request.obtenerResultados("as",language,date,Constantes.SPORTRADAR_KEY_AS);
+                break;
+            case "Continente Europeo": call = request.obtenerResultados("eu",language,date,Constantes.SPORTRADAR_KEY_EU);
+                break;
+            case "Internacional": call = request.obtenerResultados("intl",language,date,Constantes.SPORTRADAR_KEY_INTL);
+                break;
+        }
+        return call;
+    }
+
+
 }
