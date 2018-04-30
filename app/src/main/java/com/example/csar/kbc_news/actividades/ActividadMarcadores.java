@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -58,17 +59,14 @@ public class ActividadMarcadores extends ActividadBase {
         getSupportActionBar().setTitle("Marcadores");
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,ligas);
-        Spinner spinner1 = (Spinner)findViewById(R.id.spinnerLigas);
+        final Spinner spinner1 = (Spinner)findViewById(R.id.spinnerLigas);
         spinner1.setAdapter(adapter);
-
         todosResultados = (ListView) findViewById(R.id.resultsContainer);
-
         fecha = (EditText)findViewById(R.id.liga);
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
         fecha.setText(dateFormat.format(date));
-
         fecha.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View arg0) {
@@ -104,30 +102,21 @@ public class ActividadMarcadores extends ActividadBase {
 
         Spinner ligasSpinner =(Spinner) findViewById(R.id.spinnerLigas);
 
-        ligasSpinner.setOnItemSelectedListener(
-                new AdapterView.OnItemSelectedListener() {
-                    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                        Object item = parent.getItemAtPosition(pos);
-                        //System.out.println(item.toString());     //prints the text in spinner item.
-                        tipoLiga = (item.toString().equals("Internacional"))?1:0;
-                        cargarMarcadores(item.toString(),"en",fecha.getText().toString());
-                    }
-                    public void onNothingSelected(AdapterView<?> parent) {
-                    }
-                });
-
         this.httpUtils.confiarTodosCertificados();
-
-        cargarMarcadores("Continente Europeo","en",fecha.getText().toString());
-
+        Button buscar = (Button) findViewById(R.id.buscar);
+        buscar.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View arg0) {
+                String item = spinner1.getSelectedItem().toString();
+                tipoLiga = (item.toString().equals("Internacional"))?1:0;
+                cargarMarcadores(item,"en",fecha.getText().toString());
+            }
+        });
     }
 
     public void cargarMarcadores(String liga, String language, String date){
 
         final ProgressDialog progressDialog  = new ProgressDialog(this);
-       // progressDialog.setIndeterminate(true);
-        //progressDialog.setMessage("Cargando marcadores...");
-        //progressDialog.show();
         Call<RespuestaDeportes> call = this.httpUtils.callDeportesResultados(liga, language, date);
         call.enqueue(new Callback<RespuestaDeportes>() {
             @Override
@@ -138,7 +127,6 @@ public class ActividadMarcadores extends ActividadBase {
                         CustomAdapterSports cA = new CustomAdapterSports();
                         todosResultados.setAdapter(cA);
                         progressDialog.dismiss();
-                        //MensajeOK("Si hay");
                 }
                 else{
                     progressDialog.dismiss();
@@ -208,20 +196,6 @@ public class ActividadMarcadores extends ActividadBase {
 
             textmarcador.setText(String.valueOf(resultados.get(i).getSport_event_status().getHome_score()) + " - "
                     + String.valueOf(resultados.get(i).getSport_event_status().getAway_score()));
-
-
-
-
-
-//            view.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Intent in = new Intent(getApplicationContext(), ActividadWeb.class);
-//                    in.putExtra("URL",lNoticias.get(i).getUrl());
-//                    startActivity(in);
-//                }
-//            });
-
             return view;
         }
     }

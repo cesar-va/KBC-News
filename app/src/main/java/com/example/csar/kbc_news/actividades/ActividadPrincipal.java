@@ -287,6 +287,7 @@ public class ActividadPrincipal extends ActividadBase {
                 public void onClick(View v) {
                     Intent in = new Intent(getApplicationContext(), ActividadWeb.class);
                     in.putExtra("URL",lNoticias.get(i).getUrl());
+                    in.putExtra("TITLE", lNoticias.get(i).getTitle());
                     startActivity(in);
                 }
             });
