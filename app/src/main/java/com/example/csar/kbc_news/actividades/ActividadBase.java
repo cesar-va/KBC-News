@@ -12,7 +12,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -30,8 +29,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
-import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 
@@ -60,12 +59,12 @@ public class ActividadBase extends AppCompatActivity {
         final TextView navUsername = (TextView) headerView.findViewById(R.id.nombreUsuario);
         final ImageView imagenPrincipal = headerView.findViewById(R.id.imagenPrincipal);
 
-        if(mAuth.getInstance().getCurrentUser() != null){
-            try{
+        if (mAuth.getInstance().getCurrentUser() != null) {
+            try {
                 final File archivoTemporal = File.createTempFile("images", "jpg");
                 StorageReference sRef = storageRef.child(mAuth.getInstance().getCurrentUser().getUid());
 
-                if(sRef != null){
+                if (sRef != null) {
                     sRef.getFile(archivoTemporal)
                             .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                                 @Override
@@ -73,13 +72,14 @@ public class ActividadBase extends AppCompatActivity {
                                     imagenPrincipal.setImageBitmap(BitmapFactory.decodeFile(archivoTemporal.getAbsolutePath()));
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                        }
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    imagenPrincipal.setImageResource(R.drawable.pro);
+                                }
                     });
                 }
 
-            }catch(Exception e){
+            } catch (Exception e) {
             }
 
             ref.child(mAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
@@ -87,12 +87,12 @@ public class ActividadBase extends AppCompatActivity {
                 public void onDataChange(DataSnapshot snapshot) {
                     navUsername.setText(snapshot.getValue(Usuario.class).getNombre());
                 }
+
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
                 }
             });
-        }
-        else
+        } else
             navUsername.setText("Invitado");
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -102,10 +102,10 @@ public class ActividadBase extends AppCompatActivity {
 
                 switch (item.getItemId()) {
                     case R.id.cuenta:
-                        if(mAuth.getInstance().getCurrentUser() != null){
+                        if (mAuth.getInstance().getCurrentUser() != null) {
                             Intent cuenta = new Intent(getApplicationContext(), ActividadInformacionUsuario.class);
                             startActivity(cuenta);
-                        }else{
+                        } else {
                             Intent cuenta = new Intent(getApplicationContext(), ActividadLogin.class);
                             startActivity(cuenta);
                         }
@@ -138,12 +138,12 @@ public class ActividadBase extends AppCompatActivity {
                         drawerLayout.closeDrawers();
                         break;
                     case R.id.video:
-                        Uri uri = Uri.parse( "https://www.youtube.com/watch?v=c0xDkPsqfEM" );
+                        Uri uri = Uri.parse("https://www.youtube.com/watch?v=c0xDkPsqfEM");
                         startActivity(new Intent(Intent.ACTION_VIEW, uri));
                         break;
                     case R.id.autores:
-                            startActivity(new Intent(getApplicationContext(), ActividadAutores.class));
-                            break;
+                        startActivity(new Intent(getApplicationContext(), ActividadAutores.class));
+                        break;
                     default:
                         break;
                 }
@@ -194,7 +194,7 @@ public class ActividadBase extends AppCompatActivity {
         alert11.show();
     }
 
-    public void mensajeToast(String mensaje){
+    public void mensajeToast(String mensaje) {
         Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_SHORT).show();
     }
 }
