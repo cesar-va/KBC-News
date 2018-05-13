@@ -47,7 +47,4 @@ public class VariablesGlobales {
         return ref;
     }
 
-    public void setRef(DatabaseReference ref) {
-        this.ref = ref;
-    }
 }// fin de la clase de variables globales

@@ -14,6 +14,7 @@ public class Constantes {
     public static final String SPORTRADAR_KEY_EU = "mrkgeu49knzjptct5rb5pv8q";
     public static final String SPORTRADAR_KEY_AM = "2w2nm8zwqk92fpky8c5gkvv6";
     public static final String SPORTRADAR_KEY_INTL = "mngmtsmb2vrgs4yy6mywa288";
+    public static final int RESULT_CARGAR_IMAGEN = 100;
 }
 
 

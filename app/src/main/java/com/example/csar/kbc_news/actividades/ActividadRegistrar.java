@@ -2,6 +2,8 @@ package com.example.csar.kbc_news.actividades;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -15,14 +17,24 @@ import android.widget.TextView;
 
 import com.example.csar.kbc_news.R;
 import com.example.csar.kbc_news.modelos.cuenta.Usuario;
+import com.example.csar.kbc_news.utils.VariablesGlobales;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
+
+import com.example.csar.kbc_news.utils.Constantes;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,6 +44,9 @@ public class ActividadRegistrar extends ActividadBase {
     private EditText emailEditText;
     private EditText contrasenaEditText;
     private Spinner paisSpinner;
+    private static int RESULT_CARGAR_IMAGEN = 100;
+    private String rutaImagen;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +71,17 @@ public class ActividadRegistrar extends ActividadBase {
             }
         });
 
+        ImageView fotoPerfil = findViewById(R.id.fotoPerfil);
+        fotoPerfil.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                Intent i = new Intent(
+                        Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(i, Constantes.RESULT_CARGAR_IMAGEN);
+            }
+        });
 
         Spinner textView = findViewById(R.id.campoPais);
 
@@ -63,6 +89,29 @@ public class ActividadRegistrar extends ActividadBase {
         paises.add(0, "--- País ---");
         textView.setAdapter(new ArrayAdapter<String>(
                 this, android.R.layout.simple_spinner_item, paises));
+    }
+
+        @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RESULT_CARGAR_IMAGEN && resultCode == RESULT_OK && data != null) {
+            android.net.Uri selectedImage = data.getData();
+            String[] rutasArchivos = { android.provider.MediaStore.Images.Media.DATA };
+            Cursor cursor = getContentResolver().query(selectedImage,
+                    rutasArchivos, null, null, null);
+            cursor.moveToFirst();
+
+            int columnIndex = cursor.getColumnIndex(rutasArchivos[0]);
+            String rutaArchivo = cursor.getString(columnIndex);
+            cursor.close();
+
+            ImageView imageView = findViewById(R.id.fotoPerfil);
+            imageView.setImageBitmap(android.graphics.BitmapFactory.decodeFile(rutaArchivo));
+            rutaImagen = rutaArchivo;
+        }
+
+
     }
 
     public void registrarUsuario() {
@@ -77,12 +126,37 @@ public class ActividadRegistrar extends ActividadBase {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                FirebaseUser usuario = mAuth.getCurrentUser();
-                                Usuario usr = new Usuario(nombreEditText.getText().toString(), paisSpinner.getSelectedItem().toString());
-                                ref.child(usuario.getUid()).setValue(usr);
-                                enviarVerificacionEmail();
-                                mAuth.signOut();
-                                progressDialog.dismiss();
+                                final FirebaseUser usuario = mAuth.getCurrentUser();
+                                final Usuario usr = new Usuario(nombreEditText.getText().toString(), paisSpinner.getSelectedItem().toString());
+
+                                if(rutaImagen != null){
+                                    Uri file = Uri.fromFile(new java.io.File(rutaImagen));
+                                    StorageReference sRef = storageRef.child(usuario.getUid());
+
+                                    sRef.putFile(file)
+                                            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                @Override
+                                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                    ref.child(usuario.getUid()).setValue(usr);
+                                                    enviarVerificacionEmail();
+                                                    mAuth.signOut();
+                                                    progressDialog.dismiss();
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception exception) {
+                                                    progressDialog.dismiss();
+                                                    mensaje("Ocurrió un error con su foto de perfil");
+                                                }
+                                            });
+                                }else{
+                                    ref.child(usuario.getUid()).setValue(usr);
+                                    enviarVerificacionEmail();
+                                    mAuth.signOut();
+                                    progressDialog.dismiss();
+                                }
+
                             }
                         }
 
