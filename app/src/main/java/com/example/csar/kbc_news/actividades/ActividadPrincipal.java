@@ -184,7 +184,7 @@ public class ActividadPrincipal extends ActividadBase {
             }
         });
 
-        if(mAuth.getInstance().getCurrentUser() == null){
+        if(firebaseAutenticacion.getInstance().getCurrentUser() == null){
             menu.getItem(1).setVisible(false);
         }
 

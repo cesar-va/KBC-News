@@ -65,17 +65,17 @@ public class ActividadLogin extends ActividadBase {
             progressDialog.setMessage("Verificando...");
             progressDialog.show();
 
-            mAuth.signInWithEmailAndPassword(emailEditText.getText().toString(), contrasenaEditText.getText().toString())
+            firebaseAutenticacion.signInWithEmailAndPassword(emailEditText.getText().toString(), contrasenaEditText.getText().toString())
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                if(mAuth.getCurrentUser().isEmailVerified()){
+                                if(firebaseAutenticacion.getCurrentUser().isEmailVerified()){
                                     progressDialog.dismiss();
                                     Intent intento = new Intent(getApplicationContext(), ActividadPrincipal.class);
                                     startActivity(intento);
                                 }else{
-                                    mAuth.signOut();
+                                    firebaseAutenticacion.signOut();
                                     emailEditText.setError("Email pendiente de verificación");
                                     progressDialog.dismiss();
                                 }

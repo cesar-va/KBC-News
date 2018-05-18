@@ -39,9 +39,9 @@ public class ActividadBase extends AppCompatActivity {
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle actionBarDrawerToggle;
     Toolbar toolbar;
-    protected FirebaseAuth mAuth = VariablesGlobales.getInstance().getmAuth();
-    protected DatabaseReference ref = VariablesGlobales.getInstance().getRef();
-    protected StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+    protected FirebaseAuth firebaseAutenticacion = VariablesGlobales.getInstance().getmAuth();
+    protected DatabaseReference firebaseDatabaseReference = VariablesGlobales.getInstance().getRef();
+    protected StorageReference firebaseStorageReference = FirebaseStorage.getInstance().getReference();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,10 +59,10 @@ public class ActividadBase extends AppCompatActivity {
         final TextView navUsername = (TextView) headerView.findViewById(R.id.nombreUsuario);
         final ImageView imagenPrincipal = headerView.findViewById(R.id.imagenPrincipal);
 
-        if (mAuth.getInstance().getCurrentUser() != null) {
+        if (firebaseAutenticacion.getInstance().getCurrentUser() != null) {
             try {
                 final File archivoTemporal = File.createTempFile("images", "jpg");
-                StorageReference sRef = storageRef.child(mAuth.getInstance().getCurrentUser().getUid());
+                StorageReference sRef = firebaseStorageReference.child(firebaseAutenticacion.getInstance().getCurrentUser().getUid());
 
                 if (sRef != null) {
                     sRef.getFile(archivoTemporal)
@@ -82,7 +82,7 @@ public class ActividadBase extends AppCompatActivity {
             } catch (Exception e) {
             }
 
-            ref.child(mAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            firebaseDatabaseReference.child(firebaseAutenticacion.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
                     navUsername.setText(snapshot.getValue(Usuario.class).getNombre());
@@ -102,7 +102,7 @@ public class ActividadBase extends AppCompatActivity {
 
                 switch (item.getItemId()) {
                     case R.id.cuenta:
-                        if (mAuth.getInstance().getCurrentUser() != null) {
+                        if (firebaseAutenticacion.getInstance().getCurrentUser() != null) {
                             Intent cuenta = new Intent(getApplicationContext(), ActividadInformacionUsuario.class);
                             startActivity(cuenta);
                         } else {

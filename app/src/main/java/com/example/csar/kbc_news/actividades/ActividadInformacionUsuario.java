@@ -22,7 +22,7 @@ public class ActividadInformacionUsuario extends ActividadBase {
         getLayoutInflater().inflate(R.layout.actividad_informacion_usuario, contentFrameLayout);
         getSupportActionBar().setTitle("Información");
 
-        ref.child(mAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+        firebaseDatabaseReference.child(firebaseAutenticacion.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 Usuario usuario = snapshot.getValue(Usuario.class);
@@ -38,13 +38,13 @@ public class ActividadInformacionUsuario extends ActividadBase {
         });
 
         TextView email = findViewById(R.id.emailCampo);
-        email.setText(mAuth.getCurrentUser().getEmail().toString());
+        email.setText(firebaseAutenticacion.getCurrentUser().getEmail().toString());
 
         Button MiBoton = findViewById(R.id.botonCerrarSesion);
         MiBoton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View arg0) {
-                mAuth.getInstance().signOut();
+                firebaseAutenticacion.getInstance().signOut();
                 Intent intento = new Intent(getApplicationContext(), ActividadPrincipal.class);
                 startActivity(intento);
             }
