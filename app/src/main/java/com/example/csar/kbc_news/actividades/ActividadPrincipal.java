@@ -103,7 +103,7 @@ public class ActividadPrincipal extends ActividadBase {
         bundle.putString("URL", lNoticias.get(0).getUrl());
         myIntent.putExtras(bundle);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,myIntent,0);
-        manager.setRepeating(AlarmManager.RTC_WAKEUP,SystemClock.elapsedRealtime()+3000,60*150000,pendingIntent);
+        manager.setRepeating(AlarmManager.RTC_WAKEUP,SystemClock.elapsedRealtime()+3000,60*15000,pendingIntent);
     }
 
     public void cargarNoticiasBusquedaAvanzada(String categoria, String q, String pais){
