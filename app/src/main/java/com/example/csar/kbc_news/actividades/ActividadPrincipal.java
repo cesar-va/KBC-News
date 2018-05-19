@@ -27,8 +27,13 @@ import com.example.csar.kbc_news.modelos.noticias.Noticia;
 import com.example.csar.kbc_news.modelos.noticias.RespuestaNoticias;
 import com.example.csar.kbc_news.utils.HttpUtils;
 import com.example.csar.kbc_news.utils.VariablesGlobales;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -39,6 +44,7 @@ import static com.example.csar.kbc_news.R.drawable;
 import static com.example.csar.kbc_news.R.id;
 import static com.example.csar.kbc_news.R.id.compartir;
 import static com.example.csar.kbc_news.R.id.content_frame;
+import static com.example.csar.kbc_news.R.id.favorito;
 import static com.example.csar.kbc_news.R.id.newsContainer;
 import static com.example.csar.kbc_news.R.layout;
 
@@ -50,10 +56,14 @@ public class ActividadPrincipal extends ActividadBase {
     List<Noticia> lNoticias;
     String TituloNoticia = "";
     String UrlNoticia = "";
+    String urlImagenNoticia = "";
+    String descripcion = "";
     ListView todasNoticias;
     Dialog ventana;
     String spinnerCategorias = "";
     String spinnerPaises = "";
+    List<Noticia> noticiasFavoritos;
+    boolean verFavoritos = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +71,8 @@ public class ActividadPrincipal extends ActividadBase {
         FrameLayout contentFrameLayout = (FrameLayout) findViewById(content_frame);
         getLayoutInflater().inflate(layout.activity_main, contentFrameLayout);
         getSupportActionBar().setTitle("Explorador");
+
+        noticiasFavoritos = new ArrayList<>();
 
         //Comentar esto si se ejecuta desde un dispositivo real
         this.httpUtils.confiarTodosCertificados();
@@ -98,7 +110,7 @@ public class ActividadPrincipal extends ActividadBase {
                 // Aqui se pone la acción que se ejcutaría una vez que el servidor retorna los datos
                 if (response.isSuccessful() && response.body().getArticles() != null) {
                     lNoticias = response.body().getArticles();
-                    CustomAdapter cA = new CustomAdapter();
+                    CustomAdapter cA = new CustomAdapter(lNoticias);
                     todasNoticias.setAdapter(cA);
                     progressDialog.dismiss();
                 }
@@ -126,7 +138,7 @@ public class ActividadPrincipal extends ActividadBase {
                 // Aqui se pone la acción que se ejcutaría una vez que el servidor retorna los datos
                 if (response.isSuccessful() && response.body().getArticles() != null) {
                     lNoticias = response.body().getArticles();
-                    CustomAdapter cA = new CustomAdapter();
+                    CustomAdapter cA = new CustomAdapter(lNoticias);
                     todasNoticias.setAdapter(cA);
                     progressDialog.dismiss();
                 }
@@ -145,6 +157,10 @@ public class ActividadPrincipal extends ActividadBase {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater infla = getMenuInflater();
         infla.inflate(R.menu.menu_contexto_noticia, menu);
+
+        if(firebaseAutenticacion.getInstance().getCurrentUser() == null)
+            menu.getItem(0).setVisible(false);
+
         super.onCreateContextMenu(menu, v, menuInfo);
     }
 
@@ -157,6 +173,17 @@ public class ActividadPrincipal extends ActividadBase {
                 i.putExtra(Intent.EXTRA_SUBJECT, "Sharing News");
                 i.putExtra(Intent.EXTRA_TEXT, UrlNoticia);
                 startActivity(Intent.createChooser(i, "Compartir Noticia"));
+                break;
+            case favorito:
+                FirebaseUser usuario = firebaseAutenticacion.getCurrentUser();
+                String urlFormateado =  UrlNoticia.replaceAll("\\.|# |$|[|]|/|https|http", "");
+                Noticia noticia = new Noticia();
+
+                noticia.setTitle(TituloNoticia);
+                noticia.setDescription(descripcion);
+                noticia.setUrl(UrlNoticia);
+                noticia.setUrlToImage(urlImagenNoticia);
+                firebaseDatabaseReference.child(usuario.getUid()).child("Favoritos").child(urlFormateado).setValue(noticia);
                 break;
             default:
                 break;
@@ -186,6 +213,8 @@ public class ActividadPrincipal extends ActividadBase {
 
         if(firebaseAutenticacion.getInstance().getCurrentUser() == null){
             menu.getItem(1).setVisible(false);
+            menu.getItem(2).setVisible(false);
+            menu.getItem(3).setVisible(false);
         }
 
         return super.onCreateOptionsMenu(menu);
@@ -218,6 +247,35 @@ public class ActividadPrincipal extends ActividadBase {
 
                 ventana.show();
                 break;
+            case id.opcionFavoritos:
+                FirebaseUser usuario = firebaseAutenticacion.getCurrentUser();
+                verFavoritos = true;
+                firebaseDatabaseReference.child(usuario.getUid()).child("Favoritos").addValueEventListener(new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(verFavoritos){
+                            noticiasFavoritos.clear();
+                            for(DataSnapshot postSnapshot: dataSnapshot.getChildren()){
+                                Noticia noticia = postSnapshot.getValue(Noticia.class);
+                                noticiasFavoritos.add(noticia);
+                            }
+                            CustomAdapter cA = new CustomAdapter(noticiasFavoritos);
+                            todasNoticias.setAdapter(cA);
+                            verFavoritos = false;
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                break;
+            case id.opcionNoticias:
+                CustomAdapter cA = new CustomAdapter(lNoticias);
+                todasNoticias.setAdapter(cA);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -238,9 +296,15 @@ public class ActividadPrincipal extends ActividadBase {
     }
 
     class CustomAdapter extends BaseAdapter {
+        private List<Noticia> noticias;
+
+        public CustomAdapter(List<Noticia> noticias){
+            this.noticias = noticias;
+        }
+
         @Override
         public int getCount() {
-            return lNoticias.size();
+            return this.noticias.size();
         }
 
         @Override
@@ -262,13 +326,13 @@ public class ActividadPrincipal extends ActividadBase {
             TextView tc = (TextView) view.findViewById(id.cuerpo);
             final ImageView io = (ImageView) view.findViewById(id.opciones);
 
-            if (lNoticias.get(i).getUrlToImage() != null)
-                Picasso.with(ActividadPrincipal.this).load(lNoticias.get(i).getUrlToImage())
+            if (noticias.get(i).getUrlToImage() != null)
+                Picasso.with(ActividadPrincipal.this).load(noticias.get(i).getUrlToImage())
                         .resize(getWindowManager().getDefaultDisplay().getWidth(),
                                 (int) (84 / getWindowManager().getDefaultDisplay().getWidth())).into(im);
 
-            tt.setText(lNoticias.get(i).getTitle());
-            tc.setText(lNoticias.get(i).getDescription());
+            tt.setText(noticias.get(i).getTitle());
+            tc.setText(noticias.get(i).getDescription());
             io.setImageResource(drawable.ic_action_overflow);
 
             registerForContextMenu(io);
@@ -276,8 +340,13 @@ public class ActividadPrincipal extends ActividadBase {
             io.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    TituloNoticia = lNoticias.get(i).getTitle();
-                    UrlNoticia = lNoticias.get(i).getUrl();
+                    TituloNoticia = noticias.get(i).getTitle();
+                    UrlNoticia = noticias.get(i).getUrl();
+                    descripcion = noticias.get(i).getDescription();
+
+                    if(noticias.get(i).getUrlToImage() != null)
+                        urlImagenNoticia = noticias.get(i).getUrlToImage();
+
                     openContextMenu(io);
                 }
             });
@@ -286,8 +355,8 @@ public class ActividadPrincipal extends ActividadBase {
                 @Override
                 public void onClick(View v) {
                     Intent in = new Intent(getApplicationContext(), ActividadWeb.class);
-                    in.putExtra("URL",lNoticias.get(i).getUrl());
-                    in.putExtra("TITLE", lNoticias.get(i).getTitle());
+                    in.putExtra("URL",noticias.get(i).getUrl());
+                    in.putExtra("TITLE", noticias.get(i).getTitle());
                     startActivity(in);
                 }
             });

@@ -14,4 +14,13 @@
         android:icon="@drawable/ic_filter_list"
         android:title="Filtrar Busqueda" />
 
+    <item
+        android:id="@+id/opcionFavoritos"
+        android:icon="@drawable/ic_filter_list"
+        android:title="Ver favoritos" />
+    <item
+        android:id="@+id/opcionNoticias"
+        android:icon="@drawable/ic_filter_list"
+        android:title="Ver noticias" />
+
 </menu>
