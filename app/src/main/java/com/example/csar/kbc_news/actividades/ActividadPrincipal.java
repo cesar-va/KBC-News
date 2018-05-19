@@ -357,6 +357,9 @@ public class ActividadPrincipal extends ActividadBase {
                     Intent in = new Intent(getApplicationContext(), ActividadWeb.class);
                     in.putExtra("URL",noticias.get(i).getUrl());
                     in.putExtra("TITLE", noticias.get(i).getTitle());
+                    in.putExtra("descripcion", noticias.get(i).getTitle());
+                    in.putExtra("imagen", noticias.get(i).getUrlToImage());
+
                     startActivity(in);
                 }
             });
