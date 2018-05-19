@@ -49,9 +49,7 @@
         <activity
             android:name=".actividades.ActividadWeb"
             android:launchMode="singleTask" />
-        <activity
-            android:name=".actividades.ActividadPreferencias"
-            android:label="@string/title_activity_actividad_preferencias"></activity>
+        <receiver android:name=".actividades.AlarmNotificationReceiver"/>
     </application>
 
 </manifest>

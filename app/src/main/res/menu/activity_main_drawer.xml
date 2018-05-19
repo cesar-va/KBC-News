@@ -28,10 +28,6 @@
             android:id="@+id/cuenta"
             android:icon="@drawable/ic_account_circle"
             android:title="Cuenta" />
-        <item
-            android:id="@+id/configuracion"
-            android:icon="@drawable/ic_build"
-            android:title="Configuracion" />
     </menu>
 </item>
 

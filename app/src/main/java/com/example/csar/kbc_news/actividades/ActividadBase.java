@@ -132,11 +132,6 @@ public class ActividadBase extends AppCompatActivity {
                         startActivity(marcadores);
                         drawerLayout.closeDrawers();
                         break;
-                    case R.id.configuracion:
-                        Intent configuracion = new Intent(getApplicationContext(), ActividadPreferencias.class);
-                        startActivity(configuracion);
-                        drawerLayout.closeDrawers();
-                        break;
                     case R.id.video:
                         Uri uri = Uri.parse("https://www.youtube.com/watch?v=c0xDkPsqfEM");
                         startActivity(new Intent(Intent.ACTION_VIEW, uri));

@@ -1,9 +1,13 @@
 package com.example.csar.kbc_news.actividades;
 
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SearchView;
@@ -42,9 +46,6 @@ import static com.example.csar.kbc_news.R.id.content_frame;
 import static com.example.csar.kbc_news.R.id.newsContainer;
 import static com.example.csar.kbc_news.R.layout;
 
-//
-// import static com.example.csar.kbc_news.R.id.favorito;
-
 public class ActividadPrincipal extends ActividadBase {
     private HttpUtils httpUtils = VariablesGlobales.getInstance().getHttpUtils();
     List<Noticia> lNoticias;
@@ -81,8 +82,19 @@ public class ActividadPrincipal extends ActividadBase {
         ventana.setContentView(R.layout.filtros);
     }
 
-    public void cargarNoticiasBusquedaAvanzada(String categoria, String q, String pais){
+    private void startAlarm() {
+        AlarmManager manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        Intent myIntent = new Intent(ActividadPrincipal.this,AlarmNotificationReceiver.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("TITULO", lNoticias.get(0).getTitle().toString());
+        bundle.putString("DESCRIPCION", lNoticias.get(0).getDescription());
+        bundle.putString("URL", lNoticias.get(0).getUrl());
+        myIntent.putExtras(bundle);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,myIntent,0);
+        manager.setRepeating(AlarmManager.RTC_WAKEUP,SystemClock.elapsedRealtime()+3000,60*150000,pendingIntent);
+    }
 
+    public void cargarNoticiasBusquedaAvanzada(String categoria, String q, String pais){
         final ProgressDialog progressDialog  = new ProgressDialog(this);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Cargando noticias...");
@@ -128,6 +140,7 @@ public class ActividadPrincipal extends ActividadBase {
                     lNoticias = response.body().getArticles();
                     CustomAdapter cA = new CustomAdapter();
                     todasNoticias.setAdapter(cA);
+                    startAlarm();
                     progressDialog.dismiss();
                 }
             }
