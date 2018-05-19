@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!--<item
+    <item
         android:id="@+id/favorito"
-        android:title="Favorito" />-->
+        android:title="Favorito" />
     <item
         android:id="@+id/compartir"
         android:title="Compartir" />

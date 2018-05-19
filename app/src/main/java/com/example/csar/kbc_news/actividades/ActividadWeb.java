@@ -12,6 +12,8 @@ import android.webkit.WebView;
 import android.widget.FrameLayout;
 
 import com.example.csar.kbc_news.R;
+import com.example.csar.kbc_news.modelos.noticias.Noticia;
+import com.google.firebase.auth.FirebaseUser;
 
 public class ActividadWeb extends ActividadBase {
 
@@ -28,6 +30,10 @@ public class ActividadWeb extends ActividadBase {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_web, menu);
+
+        if(firebaseAutenticacion.getInstance().getCurrentUser() == null)
+            menu.getItem(1).setVisible(false);
+
         return true;
     }
 
@@ -43,7 +49,20 @@ public class ActividadWeb extends ActividadBase {
                 mensajeToast("sdfsfffd");
                 break;
             case R.id.favoritos:
-                mensajeToast("Agregado a favoritos");
+                String UrlNoticia = getIntent().getStringExtra("URL");
+                String TituloNoticia = getIntent().getStringExtra("TITLE");
+                String descripcion = getIntent().getStringExtra("descripcion");
+                String urlImagenNoticia = getIntent().getStringExtra("imagen");
+
+                FirebaseUser usuario = firebaseAutenticacion.getCurrentUser();
+                String urlFormateado =  UrlNoticia.replaceAll("\\.|# |$|[|]|/|https|http", "");
+                Noticia noticia = new Noticia();
+
+                noticia.setTitle(TituloNoticia);
+                noticia.setDescription(descripcion);
+                noticia.setUrl(UrlNoticia);
+                noticia.setUrlToImage(urlImagenNoticia);
+                firebaseDatabaseReference.child(usuario.getUid()).child("Favoritos").child(urlFormateado).setValue(noticia);
                 break;
             case R.id.copiar:
                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
