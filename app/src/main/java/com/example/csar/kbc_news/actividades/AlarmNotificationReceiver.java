@@ -27,6 +27,7 @@ public class AlarmNotificationReceiver extends BroadcastReceiver {
         Intent notificationIntent = new Intent(context, ActividadWeb.class);
         notificationIntent.putExtra("TITLE", p1);
         notificationIntent.putExtra("URL", p3);
+
         builder.setContentIntent(PendingIntent.getActivity(context, 0, notificationIntent, 0))
                 .setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)

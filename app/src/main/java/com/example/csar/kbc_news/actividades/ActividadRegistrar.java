@@ -183,6 +183,7 @@ public class ActividadRegistrar extends ActividadBase {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bitMapStream);
         byte[] datosBitmap = bitMapStream.toByteArray();
 
+        //2. Subir la imagen
         UploadTask tareaSubirImagen = sRef.putBytes(datosBitmap);
         tareaSubirImagen.addOnFailureListener(new OnFailureListener() {
             @Override
@@ -192,7 +193,7 @@ public class ActividadRegistrar extends ActividadBase {
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                //2. Una vez terminado, se guarda la informacion del usuario usando database normal (JSON)
+                //3. Una vez terminado, se guarda la informacion del usuario usando database normal (JSON)
                 firebaseDatabaseReference.child(uID).setValue(u);
                 enviarVerificacionEmail();
                 firebaseAutenticacion.signOut();

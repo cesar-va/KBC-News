@@ -82,6 +82,8 @@
             </intent-filter>
         </activity>
 
+        <receiver android:name=".actividades.AlarmNotificationReceiver" />
+
         <service android:name=".RemoteFetchService" />
     </application>
 

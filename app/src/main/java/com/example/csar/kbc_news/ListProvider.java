@@ -34,6 +34,8 @@ import static android.support.v4.content.ContextCompat.startActivity;
  * time.
  * For that use Database or other techniquest
  */
+
+// Toma las noticias del remoteFetchService y pinta la lista de noticias en widget
 public class ListProvider implements RemoteViewsFactory {
     private ArrayList<ListItem> listItemList = new ArrayList<ListItem>();
     private Context context = null;

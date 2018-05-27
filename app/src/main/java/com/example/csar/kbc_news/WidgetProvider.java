@@ -30,6 +30,9 @@ import java.time.format.TextStyle;
 import java.util.Date;
 import java.util.Locale;
 
+
+// Clase principal, se instancia el widget y las vistas (layout)
+
 public class WidgetProvider extends AppWidgetProvider{
     public static final String DATA_FETCHED = "com.example.csar.kbc_news.DATA_FETCHED";
 

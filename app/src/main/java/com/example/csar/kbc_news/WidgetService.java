@@ -29,6 +29,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
+// Servicio que le dice al widget que se va a llenar
 public class WidgetService extends RemoteViewsService {
 	/*
 	 * So pretty simple just defining the Adapter of the listview

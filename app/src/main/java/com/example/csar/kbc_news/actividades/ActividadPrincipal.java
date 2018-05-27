@@ -27,6 +27,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.csar.kbc_news.R;
+import com.example.csar.kbc_news.modelos.cuenta.Usuario;
 import com.example.csar.kbc_news.modelos.noticias.Noticia;
 import com.example.csar.kbc_news.modelos.noticias.RespuestaNoticias;
 import com.example.csar.kbc_news.utils.HttpUtils;

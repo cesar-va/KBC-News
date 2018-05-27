@@ -31,6 +31,8 @@ import retrofit2.Response;
 //        import com.androidquery.callback.AjaxCallback;
 //        import com.androidquery.callback.AjaxStatus;
 
+
+// Consume el servicio y lo envia al listProvider
 public class RemoteFetchService extends Service {
     private HttpUtils httpUtils = VariablesGlobales.getInstance().getHttpUtils();
     private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
