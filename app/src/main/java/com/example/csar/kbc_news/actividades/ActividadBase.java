@@ -133,7 +133,7 @@ public class ActividadBase extends AppCompatActivity {
                         drawerLayout.closeDrawers();
                         break;
                     case R.id.video:
-                        Uri uri = Uri.parse("https://www.youtube.com/watch?v=c0xDkPsqfEM");
+                        Uri uri = Uri.parse("https://www.youtube.com/watch?v=CG1S2vfItmQ&t=787s");
                         startActivity(new Intent(Intent.ACTION_VIEW, uri));
                         break;
                     case R.id.autores:
